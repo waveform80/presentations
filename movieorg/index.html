@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Movie Organization Task</title>
+
+  <meta name="description" content="A jQuery library for modern HTML presentations">
+  <meta name="author" content="Caleb Troughton">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+  <link rel="stylesheet" href="../themes/transition/horizontal-slide.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+  <h1>What to do with 300+ movies</h1>
+</section>
+
+<section class="slide" id="the-problem">
+  <h2>The Original Problem</h2>
+  <img src="dvds.jpg" />
+</section>
+
+<section class="slide" id="the-solution">
+  <h2>The Original Solution</h2>
+  <img src="server.jpg" />
+</section>
+
+<section class="slide" id="the-server">
+  <h2>The Server</h2>
+  <ul>
+    <li class="slide"><p>has 4x1Tb drives in a RAID-5 configuration (3Tb capacity) + 1 hot-spare</p></li>
+    <li class="slide"><p>provides HTTP, Samba, NFS, and DLNA protocols for file access</p></li>
+    <li class="slide"><p>is accessible over Wifi (iffy) or Powerline (good!)</p></li>
+    <li class="slide"><p>also provides centralized authentication (LDAP)</p></li>
+    <li class="slide"><p>and centralized printer management (CUPS)</p></li>
+    <li class="slide"><p>and network access to the scanner (SANE)</p></li>
+    <li class="slide"><p>and runs a few database servers (DB2, PostgreSQL, Firebird)</p></li>
+    <li class="slide"><p>and my mail servers (SMTP, IMAP, POP3)</p></li>
+    <li class="slide"><p>I might be taking this home-server thing a little too far ...</p></li>
+  </ul>
+</section>
+
+<section class="slide" id="the-new-problem">
+  <h2>The New Problem</h2>
+  <img src="ps3.jpg" />
+  <p>It takes <strong><em>ages</em></strong> to list the directory!</p>
+</section>
+
+<section class="slide" id="the-new-solution">
+  <h2>The New Solution</h2>
+  <img src="folders.jpg" />
+</section>
+
+<section class="slide" id="your-mission">
+  <h2>Your Mission</h2>
+  <div class="slide">
+    <h3>should you choose to accept it</h3>
+    <img src="mi.jpg" />
+  </div>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span> / <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../jquery-1.6.4.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script>$.deck('.slide');</script>
+
+</body>
+</html>
