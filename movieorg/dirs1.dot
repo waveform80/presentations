@@ -1,0 +1,16 @@
+graph G {
+	filea [label="a.mp4"];
+	fileb [label="b.mp4"];
+	filei [label="i.mp4"];
+	fileo [label="o.mp4"];
+	filer [label="r.mp4"];
+	filet [label="t.mp4"];
+	filex [label="x.mp4"];
+	movies -- filea;
+	movies -- fileb;
+	movies -- filei;
+	movies -- fileo;
+	movies -- filer;
+	movies -- filet;
+	movies -- filex;
+}

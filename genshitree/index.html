@@ -30,26 +30,73 @@
 <body class="deck-container">
 
 <section class="slide" id="title-slide">
-  <h1>How to make Genshi and ElementTree play nice</h1>
+<h1>Making Genshi and ElementTree play nicely together</h1>
 </section>
 
 <section class="slide" id="survey">
-  <h2>First, a quick survey</h2>
-  <ul>
-    <li class="slide"><h3>How many have heard of ElementTree?</h3></li>
-    <li class="slide"><h3>How many have heard of Genshi?</h3></li>
-    <li class="slide"><h3>Anyone used Genshi?</h3></li>
-    <li class="slide"><h3>Anybody played with Genshi's guts?</h3></li>
-  </ul>
+<h2>First, a quick test</h2>
+<h3>Hands up if you have:</h3>
+<ul>
+  <li class="slide">Heard of ElementTree?</li>
+  <li class="slide">Heard of Genshi?</li>
+  <li class="slide">Used Genshi?</li>
+  <li class="slide">Dug into Genshi's guts?</li>
+</ul>
 </section>
 
-<section class="slide" id="intro-element-tree">
-  <h2>ElementTree (briefly)</h2>
-  <p>ElementTree is a ridiculously simple, easy to use API for dealing with XML
-  - far better than the "official" (and truly abominable) DOM. By way of
-  demonstration:</p>
-  <h3>DOM</h3>
-  <h3>ElementTree</h3>
+<section class="slide" id="element-tree-intro1">
+<h2>What is ElementTree?</h2>
+<h3 class="slide">Short answer: Better than DOM</h3>
+</section>
+
+<section class="slide" id="element-tree-intro2">
+<h2>What is ElementTree?</h2>
+<h3>Long answer: ElementTree is a ridiculously simple, easy to use API for
+dealing with XML (much easier than the "official" API called DOM)</h3>
+<br />
+<div class="slide">
+  <p>By way of demonstration, let's create the following document manually in
+  each:</p>
+  <pre class="code"><code class="xml">&lt;movie&gt;
+  &lt;title&gt;Serenity&lt;/title&gt;
+  &lt;genre&gt;science-fiction&lt;/genre&gt;
+  &lt;imdb href=&quot;http://www.imdb.com/title/tt0379786/&quot; /&gt;
+&lt;/movie&gt;</code></pre>
+</div>
+</section>
+
+<section class="slide" id="element-tree-dom-example">
+<h2>DOM version</h2>
+<pre class="code"><code class="python">import xml.dom
+
+impl = xml.dom.getDOMImplementation()
+doc = impl.createDocument('', 'movie', '')
+title = doc.createElement('title')
+title.appendChild(doc.createTextNode('Serenity'))
+doc.documentElement.appendChild(title)
+genre = doc.createElement('genre')
+genre.appendChild(doc.createTextNode('science-fiction'))
+doc.documentElement.appendChild(genre)
+imdb = doc.createElement('imdb')
+imdb.setAttribute('href', 'http://www.imdb.com/title/tt0379786/')
+doc.documentElement.appendChild(imdb)
+print doc.toxml('UTF-8')</code></pre>
+</section>
+
+<section class="slide" id="element-tree-et-example">
+<h2>ElementTree version</h2>
+<pre class="code"><code class="python">import xml.etree.ElementTree as et
+
+doc = et.Element('movie')
+et.SubElement(doc, 'title').text = 'Serenity'
+et.SubElement(doc, 'genre').text = 'science-fiction')
+et.SubElement(doc, 'imdb').attrib['href'] = 'http://www.imdb.com/title/tt0379786/'
+print et.tostring(doc)</code></pre>
+</section>
+
+<section class="slide" id="genshi-intro">
+<h2>What is Genshi?</h2>
+<h3>Short answer: an awesome XML templating system</h3>
 </section>
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
@@ -73,6 +120,7 @@
 <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../jquery-1.6.4.min.js"><\/script>')</script>
+<script src="../jquery.beautyOfCode-min.js"></script>
 
 <!-- Deck Core and extensions -->
 <script src="../core/deck.core.js"></script>
@@ -81,7 +129,7 @@
 <script src="../extensions/status/deck.status.js"></script>
 <script src="../extensions/navigation/deck.navigation.js"></script>
 <script src="../extensions/hash/deck.hash.js"></script>
-<script>$.deck('.slide');</script>
+<script src="base.js"></script>
 
 </body>
 </html>

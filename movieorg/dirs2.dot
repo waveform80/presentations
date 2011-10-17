@@ -1,0 +1,22 @@
+graph G {
+	dirag [label="a-g"];
+	dirhp [label="h-p"];
+	dirqz [label="q-z"];
+	filea [label="a.mp4"];
+	fileb [label="b.mp4"];
+	filei [label="i.mp4"];
+	fileo [label="o.mp4"];
+	filer [label="r.mp4"];
+	filet [label="t.mp4"];
+	filex [label="x.mp4"];
+	movies -- dirag;
+	movies -- dirhp;
+	movies -- dirqz;
+	dirag -- filea;
+	dirag -- fileb;
+	dirhp -- filei;
+	dirhp -- fileo;
+	dirqz -- filer;
+	dirqz -- filet;
+	dirqz -- filex;
+}
