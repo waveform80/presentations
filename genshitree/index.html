@@ -46,13 +46,13 @@
 
 <section class="slide" id="element-tree-intro1">
 <h2>What is ElementTree?</h2>
-<h3 class="slide">Short answer: Better than DOM</h3>
+<p>Short answer: Better than DOM</p>
 </section>
 
 <section class="slide" id="element-tree-intro2">
 <h2>What is ElementTree?</h2>
-<h3>Long answer: ElementTree is a ridiculously simple, easy to use API for
-dealing with XML (much easier than the "official" API called DOM)</h3>
+<p>Longer answer: ElementTree is a ridiculously simple, easy to use API for
+dealing with XML (much easier than the "official" API called DOM)</p>
 <br />
 <div class="slide">
   <p>By way of demonstration, let's create the following document manually in
@@ -96,7 +96,42 @@ print et.tostring(doc)</code></pre>
 
 <section class="slide" id="genshi-intro">
 <h2>What is Genshi?</h2>
-<h3>Short answer: an awesome XML templating system</h3>
+<p>Short answer: an awesome XML templating system which lets you do stuff like
+this:</p>
+<pre class="code"><code class="xml">&lt;ol py:if=&quot;links&quot; class=&quot;links&quot;&gt;
+  &lt;li py:for=&quot;link in links&quot;&gt;
+    &lt;a href=&quot;${link.url}&quot;&gt;${link.title}&lt;/a&gt;
+    posted by ${link.username} at ${link.time.strftime('%x %X')}
+    &lt;div class=&quot;info&quot;&gt;
+      &lt;a href=&quot;${url('/info/%s/' % link.id)}&quot;&gt;
+        ${len(link.comments)} comments
+      &lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+</section>
+
+<section class="slide" id="genshi-why">
+<h2>What is Genshi?</h2>
+<p>However - we're more interested in how it generates XML elements with its
+cool ElementFactory. Here's how you could create the earlier XML document with
+Genshi's ElementFactory:</p>
+<pre class="code"><code class="python">import genshi.builder
+
+tag = genshi.builder.ElementFactory()
+print tag.movie(
+    tag.title('Serenity'),
+    tag.genre('science-fiction'),
+    tag.imdb(href='http://www.imdb.com/title/tt0379786/')
+)</code></pre>
+<div class="slide">
+  <p>How does Genshi know about my made-up &lt;movie&gt; element?</p>
+</div>
+</section>
+
+<section class="slide" id="get-magic">
+<h2>__get__ magic</h2>
+<p>Genshi's ElementFactory overrides __get__ to generate unknown methods on the fly.</p>
 </section>
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
@@ -115,7 +150,6 @@ print et.tostring(doc)</code></pre>
 </form>
 
 <a href="." title="Permalink to this slide" class="deck-permalink">#</a>
-
 
 <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
