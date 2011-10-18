@@ -44,28 +44,43 @@
 </ul>
 </section>
 
-<section class="slide" id="element-tree-intro1">
-<h2>What is ElementTree?</h2>
-<p>Short answer: Better than DOM</p>
+<section class="slide" id="xml-methods">
+<h2>Methods of generating XML/HTML</h2>
+<div class="slide">
+<h3>Method 1: DOM</h3>
+  <p>
+    <strong>Advantages:</strong> Built into Python ... err ... that's it<br />
+    <strong>Disadvantages:</strong> Too numerous to mention
+  </p>
+</div>
+<div class="slide">
+<h3>Method 2: ElementTree</h3>
+  <p>
+    <strong>Advantages:</strong> Built into Python, simple, fast<br />
+    <strong>Disadvantages:</strong> Despite being better than DOM it's still not exactly "Pythonic"
+  </p>
+</div>
+<div class="slide">
+<h3>Method 3: Genshi ElementFactory</h3>
+  <p>
+    <strong>Advantages:</strong> Definitely Pythonic<br />
+    <strong>Disadvantages:</strong> Produces strings which makes post-processing ugly without a reparse step
+  </p>
+</div>
 </section>
 
-<section class="slide" id="element-tree-intro2">
-<h2>What is ElementTree?</h2>
-<p>Longer answer: ElementTree is a ridiculously simple, easy to use API for
-dealing with XML (much easier than the "official" API called DOM)</p>
-<br />
-<div class="slide">
-  <p>By way of demonstration, let's create the following document manually in
-  each:</p>
-  <pre class="code"><code class="xml">&lt;movie&gt;
+<section class="slide" id="demo">
+<h2>By way of demonstration...</h2>
+<p>By way of demonstration, let's create the following document manually in
+each:</p>
+<pre class="code"><code class="xml">&lt;movie&gt;
   &lt;title&gt;Serenity&lt;/title&gt;
   &lt;genre&gt;science-fiction&lt;/genre&gt;
   &lt;imdb href=&quot;http://www.imdb.com/title/tt0379786/&quot; /&gt;
 &lt;/movie&gt;</code></pre>
-</div>
 </section>
 
-<section class="slide" id="element-tree-dom-example">
+<section class="slide" id="demo-dom">
 <h2>DOM version</h2>
 <pre class="code"><code class="python">import xml.dom
 
@@ -80,10 +95,11 @@ doc.documentElement.appendChild(genre)
 imdb = doc.createElement('imdb')
 imdb.setAttribute('href', 'http://www.imdb.com/title/tt0379786/')
 doc.documentElement.appendChild(imdb)
+
 print doc.toxml('UTF-8')</code></pre>
 </section>
 
-<section class="slide" id="element-tree-et-example">
+<section class="slide" id="demo-et">
 <h2>ElementTree version</h2>
 <pre class="code"><code class="python">import xml.etree.ElementTree as et
 
@@ -91,31 +107,12 @@ doc = et.Element('movie')
 et.SubElement(doc, 'title').text = 'Serenity'
 et.SubElement(doc, 'genre').text = 'science-fiction')
 et.SubElement(doc, 'imdb').attrib['href'] = 'http://www.imdb.com/title/tt0379786/'
+
 print et.tostring(doc)</code></pre>
 </section>
 
-<section class="slide" id="genshi-intro">
-<h2>What is Genshi?</h2>
-<p>Short answer: an awesome XML templating system which lets you do stuff like
-this:</p>
-<pre class="code"><code class="xml">&lt;ol py:if=&quot;links&quot; class=&quot;links&quot;&gt;
-  &lt;li py:for=&quot;link in links&quot;&gt;
-    &lt;a href=&quot;${link.url}&quot;&gt;${link.title}&lt;/a&gt;
-    posted by ${link.username} at ${link.time.strftime('%x %X')}
-    &lt;div class=&quot;info&quot;&gt;
-      &lt;a href=&quot;${url('/info/%s/' % link.id)}&quot;&gt;
-        ${len(link.comments)} comments
-      &lt;/a&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</code></pre>
-</section>
-
-<section class="slide" id="genshi-why">
-<h2>What is Genshi?</h2>
-<p>However - we're more interested in how it generates XML elements with its
-cool ElementFactory. Here's how you could create the earlier XML document with
-Genshi's ElementFactory:</p>
+<section class="slide" id="demo-genshi">
+<h2>Genshi ElementFactory version</h2>
 <pre class="code"><code class="python">import genshi.builder
 
 tag = genshi.builder.ElementFactory()
@@ -125,7 +122,7 @@ print tag.movie(
     tag.imdb(href='http://www.imdb.com/title/tt0379786/')
 )</code></pre>
 <div class="slide">
-  <p>How does Genshi know about my made-up &lt;movie&gt; element?</p>
+  <p><strong>Question:</strong> how does Genshi know about my made-up &lt;movie&gt; element?</p>
 </div>
 </section>
 
