@@ -5,8 +5,8 @@
 
   <title>Genshi with ElementTree</title>
 
-  <meta name="description" content="A jQuery library for modern HTML presentations">
-  <meta name="author" content="Caleb Troughton">
+  <meta name="description" content="Extending Genshi to produce ElementTree Elements">
+  <meta name="author" content="Dave Hughes">
   <meta name="viewport" content="width=1024, user-scalable=no">
 
   <!-- Core and extension CSS files -->
@@ -30,17 +30,16 @@
 <body class="deck-container">
 
 <section class="slide" id="title-slide">
-<h1>Making Genshi and ElementTree play nicely together</h1>
+<h1>Making an ElementTreeFactory</h1>
 </section>
 
 <section class="slide" id="survey">
 <h2>First, a quick test</h2>
 <h3>Hands up if you have:</h3>
 <ul>
-  <li class="slide">Heard of ElementTree?</li>
-  <li class="slide">Heard of Genshi?</li>
+  <li class="slide">Used ElementTree?</li>
   <li class="slide">Used Genshi?</li>
-  <li class="slide">Dug into Genshi's guts?</li>
+  <li class="slide">Dug into Genshi's guts and seen the fabulous ElementFactory?</li>
 </ul>
 </section>
 
@@ -57,14 +56,14 @@
 <h3>Method 2: ElementTree</h3>
   <p>
     <strong>Advantages:</strong> Built into Python, simple, fast<br />
-    <strong>Disadvantages:</strong> Despite being better than DOM it's still not exactly "Pythonic"
+    <strong>Disadvantages:</strong> Geared toward processing rather than construction of XML/HTML
   </p>
 </div>
 <div class="slide">
-<h3>Method 3: Genshi ElementFactory</h3>
+<h3>Method 3: Genshi's ElementFactory</h3>
   <p>
-    <strong>Advantages:</strong> Definitely Pythonic<br />
-    <strong>Disadvantages:</strong> Produces strings which makes post-processing ugly without a reparse step
+    <strong>Advantages:</strong> Beautiful code, insanely simple, fast<br />
+    <strong>Disadvantages:</strong> Geared toward construction rather than processing of XML/HTML
   </p>
 </div>
 </section>
@@ -105,7 +104,7 @@ print doc.toxml('UTF-8')</code></pre>
 
 doc = et.Element('movie')
 et.SubElement(doc, 'title').text = 'Serenity'
-et.SubElement(doc, 'genre').text = 'science-fiction')
+et.SubElement(doc, 'genre').text = 'science-fiction'
 et.SubElement(doc, 'imdb').attrib['href'] = 'http://www.imdb.com/title/tt0379786/'
 
 print et.tostring(doc)</code></pre>
@@ -127,8 +126,207 @@ print tag.movie(
 </section>
 
 <section class="slide" id="get-magic">
-<h2>__get__ magic</h2>
-<p>Genshi's ElementFactory overrides __get__ to generate unknown methods on the fly.</p>
+<h2>__getattr__ and __call__ magic</h2>
+<p>Genshi's ElementFactory overrides __getattr__ to generate Element instances.
+The code (simplified) looks like this:</p>
+<pre class="code"><code class="python">
+class ElementFactory(object):
+    def __getattr__(self, name):
+        return Element(name)
+    # ...
+</code></pre>
+<div class="slide">
+  <p>Meanwhile, the Element class overrides __call__ to set attributes and
+  append content based on its parameters. The code (again simplified) is as
+  follows:</p>
+  <pre class="code"><code class="python">
+class Element(object):
+    def __call__(self, *args, **kwargs):
+        self.attrib |= kwargs_to_attrs(kwargs)
+        for arg in args:
+            self.append(arg)
+
+    def append(self, node):
+        # ...
+</code></pre>
+</section>
+
+<section class="slide" id="etfactory-append">
+<h2>ElementTreeFactory._append</h2>
+<p>First, a utility routine to append content to Elements. This turns out to be
+a little complex, due to ElementTree's separation of <tt>.text</tt> and
+<tt>.tail</tt>:</p>
+<pre class="code"><code class="python">
+import xml.etree.ElementTree as et
+
+class ElementTreeFactory(object):
+    def _append(self, node, contents):
+        # If the content is a string, decide which element's
+        # text or tail property it gets assigned to
+        if isinstance(contents, basestring) and contents:
+            if len(node) == 0:
+                if node.text is None:
+                    node.text = contents
+                else:
+                    node.text += contents
+            else:
+                last = node[-1]
+                if last.tail is None:
+                    last.tail = contents
+                else:
+                    last.tail += contents
+        # If the content is an element, simply append it to this
+        elif et.iselement(contents):
+            contents.tail = ''
+            node.append(contents)
+        # Otherwise, try treating it as an iterable
+        else:
+            for content in contents:
+                self._append(node, content)
+</code></pre>
+</section>
+
+<section class="slide" id="etfactory-element">
+<h2>ElementTreeFactory._element</h2>
+<p>Next, something to construct an Element with content from positional
+arguments and attributes from keyword arguments:</p>
+<pre class="code"><code class="python">
+import xml.etree.ElementTree as et
+
+class ElementTreeFactory(object):
+    def _append(self, node, contents):
+        # ...
+
+    def _element(self, _name, *args, **kwargs):
+        # Construct the Element with all attributes from kwargs
+        e = et.Element(_name, dict(
+            (key, value) for key, value in kwargs.iteritems()
+            if value is not None and value is not False
+        ))
+        # Append the content from args
+        for args in args:
+            self._append(e, arg)
+            return e
+</code></pre>
+</section>
+
+<section class="slide" id="etfactory-getattr">
+<h2>ElementTreeFactory.__getattr__</h2>
+<p>Finally, the magic __getattr__ bit from Genshi, with some added caching for
+performance:</p>
+<pre class="code"><code class="python">
+import xml.etree.ElementTree as et
+
+class ElementTreeFactory(object):
+    def _append(self, node, contents):
+        # ...
+
+    def _element(self, _name, *args, **kwargs):
+        # ...
+
+    def __getattr__(self, name):
+        # Generate a method to deal with this tag
+        def create_elem(*args, **kwargs):
+            return self._element(elem_name, *args, **kwargs)
+        # Add the method to the factory
+        setattr(self, name, create_elem)
+        return generator
+</code></pre>
+</section>
+
+<section class="slide" id="etfactory-test">
+<h2>Test drive</h2>
+<p>The resulting class allows us to construct documents like this:</p>
+<pre class="code"><code class="python">
+tag = ElementTreeFactory()
+
+print et.tostring(
+    tag.html(
+        tag.head(
+            tag.title('Boring Management Report')
+        ),
+        tag.hr(),
+        tag.body(
+            tag.h1('Boring Management Report'),
+            tag.table(
+                tag.thead(
+                    tag.tr(tag.th('Quarter'), tag.th('Sales'))
+                ),
+                tag.tbody(
+                    tag.tr(tag.td(row.quarter), tag.td(row.sales))
+                    for row in dataset
+                )
+            )
+        )
+    )
+)
+</code></pre>
+<div class="slide">
+  <p>Okay, that's all very nice, but how is it any better than Genshi's
+  ElementFactory?</p>
+</div>
+</section>
+
+<section class="slide" id="etfactory-override">
+<h2>Overriding stuff</h2>
+<p>Remember that __getattr__ is only called if the attribute is <em>not</em>
+found on the class? We can supply our own versions of methods to customize the
+output (this is an actual example complete with genuine corporate
+stupidity)</p>
+<pre class="code"><code class="python">
+class W3ElementTreeFactory(ElementTreeFactory):
+    def _add_class(self, elem, cls):
+        classes = set(elem.attrib.get('class', '').split())
+        classes.add(cls)
+        elem.attrib['class'] = ' '.join(classes)
+
+    def hr(self, *args, **kwargs):
+        # Output &lt;div class="hrule-dots"&gt; instead of &lt;hr&gt;
+        result = self._element('div', ' ', **kwargs)
+        self._add_class(result, 'hrule-dots')
+        return result
+</code></pre>
+</section>
+
+<section class="slide" id="etfactory-override2">
+<h2>Overriding more stuff</h2>
+<p>Here's a more complex example (again from the real world):</p>
+<pre class="code"><code class="python">
+class W3ElementTreeFactory(ElementTreeFactory):
+    def _add_class(self, elem, cls):
+        # ...
+
+    def hr(self, *args, **kwargs):
+        # ...
+
+    def table(self, *args, **kwargs):
+        table = self._element('table', *args, **kwargs)
+        # If there is a &lt;thead&gt; element in content, apply the
+        # 'blue-dark' CSS class to all rows in it
+        thead = table.find('thead')
+        if thead:
+            for tr in thead.findall('tr'):
+                self._add_class(tr, 'blue-dark')
+        # Find the &lt;tbody&gt; element and apply even and odd classes
+        # to the rows within it
+        tbody = table.find('tbody')
+        if tbody:
+            for n, tr in enumerate(tbody.findall('tr')):
+                self._add_class(tr, ['odd', 'even'][n % 2])
+        return table
+</code></pre>
+</section>
+
+<section class="slide" id="conclusion">
+<h2>Further Examples</h2>
+<p>Some more examples of things I've done with the ElementTreeFactory:</p>
+<ul>
+  <li>Overriding table to apply the jQuery TableSorter plugin to all tables with a header</li>
+  <li>Overriding body to add various structural divs in order to use existing content with a new stylesheet (getting into realms of XSLT here)</li>
+</ul>
+<div class="slide">
+  <h3>Questions?</h3>
+</div>
 </section>
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
