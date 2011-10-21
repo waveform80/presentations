@@ -46,21 +46,21 @@
 <section class="slide" id="xml-methods">
 <h2>Methods of generating XML/HTML</h2>
 <div class="slide">
-<h3>Method 1: DOM</h3>
+  <h3>Method 1: DOM</h3>
   <p>
     <strong>Advantages:</strong> Built into Python ... err ... that's it<br />
     <strong>Disadvantages:</strong> Too numerous to mention
   </p>
 </div>
 <div class="slide">
-<h3>Method 2: ElementTree</h3>
+  <h3>Method 2: ElementTree</h3>
   <p>
     <strong>Advantages:</strong> Built into Python, simple, fast<br />
     <strong>Disadvantages:</strong> Geared toward processing rather than construction of XML/HTML
   </p>
 </div>
 <div class="slide">
-<h3>Method 3: Genshi's ElementFactory</h3>
+  <h3>Method 3: Genshi's ElementFactory</h3>
   <p>
     <strong>Advantages:</strong> Beautiful code, insanely simple, fast<br />
     <strong>Disadvantages:</strong> Geared toward construction rather than processing of XML/HTML
@@ -121,7 +121,14 @@ print tag.movie(
     tag.imdb(href='http://www.imdb.com/title/tt0379786/')
 )</code></pre>
 <div class="slide">
-  <p><strong>Question:</strong> how does Genshi know about my made-up &lt;movie&gt; element?</p>
+  <p><strong>Question 1:</strong> What if we could construct an
+  "ElementTreeFactory" combining the post-processing advantages of ElementTree
+  with the simple interface of Genshi's ElementFactory (which is clearly the
+  most elegant of the three examples we've seen)?</p>
+</div>
+<div class="slide">
+  <p><strong>Question 2:</strong> How does Genshi know about my made-up
+  &lt;movie&gt; element?</p>
 </div>
 </section>
 
@@ -149,6 +156,7 @@ class Element(object):
     def append(self, node):
         # ...
 </code></pre>
+</div>
 </section>
 
 <section class="slide" id="etfactory-append">
@@ -206,7 +214,7 @@ class ElementTreeFactory(object):
         # Append the content from args
         for args in args:
             self._append(e, arg)
-            return e
+        return e
 </code></pre>
 </section>
 
@@ -245,9 +253,9 @@ print et.tostring(
         tag.head(
             tag.title('Boring Management Report')
         ),
-        tag.hr(),
         tag.body(
             tag.h1('Boring Management Report'),
+            tag.hr(),
             tag.table(
                 tag.thead(
                     tag.tr(tag.th('Quarter'), tag.th('Sales'))
@@ -318,11 +326,21 @@ class W3ElementTreeFactory(ElementTreeFactory):
 </section>
 
 <section class="slide" id="conclusion">
-<h2>Further Examples</h2>
+<h2>Final Thoughts</h2>
 <p>Some more examples of things I've done with the ElementTreeFactory:</p>
 <ul>
-  <li>Overriding table to apply the jQuery TableSorter plugin to all tables with a header</li>
-  <li>Overriding body to add various structural divs in order to use existing content with a new stylesheet (getting into realms of XSLT here)</li>
+  <li>Overriding table to apply the jQuery TableSorter plugin to all tables
+  with a header</li>
+  <li>Overriding body to add various structural divs in order to use existing
+  content with a new stylesheet (getting into realms of XSLT here)</li>
+</ul>
+<p>In conclusion:</p>
+<ul>
+  <li>The ElementFactory model makes XML/HTML generating code incredibly simple
+  and intuitive</li>
+  <li>By converting it to use ElementTree Elements we gain post-processing
+  flexibility allowing us to centralize code for design decisions like "make
+  all table rows alternate colours"</li>
 </ul>
 <div class="slide">
   <h3>Questions?</h3>
