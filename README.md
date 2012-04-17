@@ -11,22 +11,17 @@ A JavaScript library for building modern HTML presentations. deck.js is flexible
 
 Check out the [documentation page](http://imakewebthings.github.com/deck.js/docs) for more information on the methods, events, and options available in core and all the included extensions.  A sample standard slide deck is included in the package under the `introduction` folder.  You can also [view that sample deck](http://imakewebthings.github.com/deck.js/introduction) online to play with the available style and transition themes.
 
-## More Extensions and Related Projects
+## Extensions, Themes, and Related Projects
 
-If you have an extension, theme, or project related to or using deck.js, please send me a link and I'll add it to this list.
-
-- [deck.js-codemirror](https://github.com/iros/deck.js-codemirror) by [iros](https://github.com/iros): Integrates [codemirror](http://codemirror.net/) into deck.js, giving you editable, executable, syntax highlighted code snippets right inside your slides.
-- [deck.remote.js](https://github.com/seppo0010/deck.remote.js) by [seppo0010](https://github.com/seppo0010): Uses node.js to give speakers a remote view to control slides, keep notes, and preview previous+next slides.
-- [deckjs-remote](https://github.com/chrisjaure/deckjs-remote) by [chrisjaure](https://github.com/chrisjaure): Control your deck remotely through a node.js service. Presenters can use the [publicly available service](http://deckjs-remote.no.de) or host it themselves.
-- [deckem](https://github.com/DamonOehlman/deckem) by [DamonOehlman](https://github.com/DamonOehlman): [Jade](http://jade-lang.com/) templating for deck.js.
-- [markdown2deckjs](https://github.com/ulf/markdown2deckjs) by [ulf](https://github.com/ulf): Write your slides in Markdown and convert them into a full working deck.
-- [deck.gotonumkey.js](https://github.com/KingHenne/deck.gotonumkey.js) by [KingHenne](https://github.com/KingHenne): A small extension that lets you jump to any slide by pressing the corresponding number key(s). 
+Take a look at [the wiki](https://github.com/imakewebthings/deck.js/wiki) for lists of extensions, themes, and other related goodies.  If you have a publicly available project of your own, feel free to add to the list.
 
 ## Tests & Support
 
 Unit tests are written with [Jasmine](http://pivotal.github.com/jasmine/) and [jasmine-jquery](https://github.com/velesin/jasmine-jquery). You can [run them here](http://imakewebthings.github.com/deck.js/test).
 
 deck.js has been tested with jQuery 1.6+ and works in IE7+, Chrome, FF, Safari, and Opera. The more capable browsers receive greater enhancements, but a basic cutaway slideshow will work for all browsers listed above. Please don't give your presentations in IE6.
+
+For any questions or general discussion about deck.js please direct your attention to the [mailing list](http://groups.google.com/group/deckjs) (uses Google groups.)  If you would like to report a bug, please see the [issues page](https://github.com/imakewebthings/deck.js/issues).
 
 ## Known Bug(s)
 
@@ -36,15 +31,27 @@ There is an issue with certain builds of Chrome that result in a solid blue back
 - Disable hardware compositing by setting `--disable-accelerated-compositing` in the Chrome loading options
 - Replace instances of `translate3d` with `translate` in the CSS of your decks (though this will slow down performance on iOS devices and Safari.)
 
+Firefox contains a bug that allows users to scroll horizontally using the trackpad despite `overflow-x:hidden`. ([Bug 664275](https://bugzilla.mozilla.org/show_bug.cgi?id=664275) and [Bug 325942](https://bugzilla.mozilla.org/show_bug.cgi?id=325942).) If anyone knows of any workarounds to this issue please contact me.
+
 ## Printing
 
 Core includes stripped down black and white print styles for the standard slide template that is suitable for handouts.
 
-## Awesome People
+## Awesome Contributors
 
-Big thanks to the folks who have contributed code to the project:
+- [jbuck](https://github.com/jbuck)
+- [cykod](https://github.com/cykod)
+- [dougireton](https://github.com/dougireton)
+- [awirick](https://github.com/awirick)
+- Daniel Knittl-Frank
+- [alexch](https://github.com/alexch)
 
-- [jbuck](https://github.com/jbuck) - Touch controls.
+If you would like to contribute a patch to deck.js please do as much as you can of the following:
+
+- Add or amend Jasmine tests.
+- Add inline documentation.
+- If the standard snippet of an extension changes, please change it in both the introduction deck and the snippet html in the extension folder.
+- If the API changes, it would be awesome to receive a parallel pull request to the gh-pages branch which updates the public-facing documentation.
 
 ## License
 
