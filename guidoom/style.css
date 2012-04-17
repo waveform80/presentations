@@ -47,7 +47,7 @@
   display: block;
   font-size: 14px;
 }
-dt {
+.deck-container dl dt {
   font-weight: bold;
 }
 dl.compact, dt.compact, dd.compact {
