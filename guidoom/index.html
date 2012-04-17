@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Who Should I Blame?</title>
+
+  <meta name="description" content="My week of Hell with Python Cross-Platform GUI Development">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+  <link rel="stylesheet" href="../themes/transition/fade.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>Who Should I Blame?</h1>
+</section>
+
+<section class="slide" id="background-1">
+<h2>So, Holly's been away for two months</h2>
+<ul>
+  <li class="slide">... in San Francisco</li>
+  <li class="slide">... at the Stanford Synchrotron</li>
+  <li class="slide">... playing with dinosaur fossils</li>
+  <li class="slide">... in a particle accelerator</li>
+  <li class="slide">but I'm not jealous!</li>
+</ul>
+</section>
+
+<section class="slide" id="background-2">
+<h2>Anyway, she's back with 50Gb of data</h2>
+<ul>
+  <li class="slide">... well, I say 50Gb</li>
+  <li class="slide">... it's more like 4Gb when the bother to compress it</li>
+  <li class="slide">... and my database is bigger anyway</li>
+  <li class="slide">although admittedly it's a lot less cool</li>
+</ul>
+</section>
+
+<section class="slide" id="background-3">
+<h2>So how do they process this data?</h2>
+<ul>
+  <li class="slide">MATLAB&trade; code!</li>
+  <li class="slide">Bad MATLAB code</li>
+  <li class="slide">Written by scientists</li>
+  <li class="slide">... yes, <em>that</em> bad</li>
+</ul>
+</section>
+
+<section class="slide" id="matlab-ui">
+<h2>This is a user interface...</h2>
+<span style="font-size: 8pt;">
+<pre class="brush: matlabkey">
+function create_tiffs
+
+inputFolder = '/home/holly/Desktop/pterosaur/RAS files'
+outputFolder8 = '/home/holly/Desktop/pterosaur/8 Bit TIFFs'
+outputFolder16 = '/home/holly/Desktop/pterosaur/16 Bit TIFFs'
+channel_file = 'Channels HZ.txt'
+bin_list = [1]
+% bin_list = [1 2 4 8]
+
+files_info = dir([inputFolder '/*.RAS'])
+files = {}
+for ifile = 1: length(files_info)
+    files{ifile} = files_info(ifile).name
+end
+
+channels = {'XX', 'Cu', 'Zn', 'Pbli', 'Pbla', 'Pblb', 'Ca', 'Br', 'Mn', 'Fe', 'Tika', 'Tikb', 'ES', 'ICR', 'Nika', 'none'}
+
+for ifile = 1: length(files)
+
+    for ichannel = 1: length(channels)
+
+        % read all the data
+        summed = qscanreadchannel(fullfile(inputFolder, files{ifile}), ichannel);
+        ...
+</pre>
+</span>
+</section>
+
+<section class="slide" id="console">
+<h2>UI #1: Console</h2>
+<dl class="compact">
+  <dt>Time taken</dt><dd>1 day</dd>
+  <dt>Linux?</dt><dd>Of course!</dd>
+  <dt>Windows?</dt><dd>If you must...</dd>
+  <dt>Deps</dt><dd>matplotlib, numpy</dd>
+</dl>
+</section>
+
+<section class="slide" id="console-bad">
+<h2>UI #1: Console</h2>
+<ul>
+  <li class="slide">"It looks awfully complicated..."</li>
+  <li class="slide">"What? Compared to <em>editing code?!</em>"</li>
+  <li class="slide">"Well, maybe, but we've got instructions for that"</li>
+  <li class="slide">"But look, I included a <tt>--help</tt> screen!"</li>
+  <li class="slide">"They won't like it you know..."</li>
+</ul>
+</section>
+
+<section class="slide" id="tk">
+<h2>GUI #1: Tk</h2>
+<p>Seriously? Dammit, I want something funky and modern!</p>
+</section>
+
+<section class="slide" id="wx">
+<h2>GUI #2: WxWidgets</h2>
+<ul>
+  <li class="slide">Seems a bit silly having a x-platform library built on a x-platform library...</li>
+  <li class="slide">Plenty of forum posts indicating flakiness</li>
+  <li class="slide">Doesn't seem to be included in any of the matplotlib Windows distributions</li>
+</ul>
+</section>
+
+<section class="slide" id="gtk3">
+<h2>GUI #3: GTK3</h2>
+<ul>
+  <li>Wonderful toolkit and API (PyGObjects)</li>
+  <li>Horribly buggy designer (Glade)</li>
+  <li>Still, after a bit of effort, got something working ...</li>
+  <li>... only to discover the matplotlib bundled with Ubuntu doesn't support GTK3</li>
+  <li>... and it's not packaged for Windows yet either (well, not nicely anyway)</li>
+</ul>
+</section>
+
+<section class="slide" id="gtk2">
+<h2>GUI #4: GTK2 (PyGTK)</h2>
+<ul>
+  <li>Still a wonderful toolkit, albeit a slightly rougher API</li>
+  <li>Still a horribly buggy designer</li>
+  <li>But after experience with GTK3, quickly got something working</li>
+  <li>Even got a matplotlib chart embedded in it!</li>
+  <li>... and then discovered menus don't work with Unity</li>
+  <li>... found forum solution: upgrade your code to GTK3 ...</li>
+</ul>
+</section>
+
+<section class="slide" id="pyside">
+<h2>GUI #5: PySide</h2>
+<ul>
+  <li>Slightly limited toolkit, but workable</li>
+  <li>Truly awesome designer!</li>
+  <li>Knocked up a workable GUI base</li>
+  <li>... only to discover the matplotlib bundled with Ubuntu doesn't support <strike>GTK3</strike> PySide</li>
+</ul>
+</section>
+
+<section class="slide" id="pyqt4">
+<h2>GUI #6: PyQT4</h2>
+<ul>
+  <li>Same toolkit as PySide</li>
+  <li>Same designer as PySide</li>
+  <li>Almost everything the same as PySide - took about 5 minutes reading and porting to convert it</li>
+  <li>... and then the fucker segfaulted</li>
+  <li>... matplotlib won't play nice with PyQT4 when its plots are embedded in ... well just about anything except the main window</li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
