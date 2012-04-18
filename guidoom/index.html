@@ -19,7 +19,6 @@
 
   <!-- Theme CSS files (menu swaps these out) -->
   <link rel="stylesheet" href="../themes/style/web-2.0.css">
-  <link rel="stylesheet" href="../themes/transition/fade.css">
 
   <!-- Custom CSS just for this page -->
   <link rel="stylesheet" href="style.css">
@@ -114,9 +113,24 @@ channels = {'XX', 'Cu', 'Zn', 'Pbli', 'Pbla', 'Pblb', 'Ca', 'Br', 'Mn', 'Fe', 'T
 </ul>
 </section>
 
-<section class="slide" id="tk">
+<section class="slide" id="gui-reqs">
 <h2>So I set out to build a GUI...</h2>
-<p>But which toolkit?</p>
+<p>Requirements:</p>
+<ul>
+  <li>Must work on Linux</li>
+  <li>Must work on Windows</li>
+  <li>Would be nice if it worked on Mac too</li>
+  <li>Must be trivial to install:</li>
+  <ul>
+    <li>On Linux that means everything must be packaged and preferably should be in the main repos</li>
+    <li>On Windows that means everything should be <tt>.exe</tt> installable, and more than three installers will probably try the patience of the audience</li>
+    <li>On Mac, I have no idea what that means...</li>
+  </ul>
+</ul>
+</section>
+
+<section class="slide" id="gui-toolkit">
+<h2>So I set out to choose a GUI toolkit...</h2>
 <div class="slide">
   <h3>Tk?</h3>
   <ul><li>Seriously? Dammit, I want something funky and modern!</li></ul>
@@ -125,8 +139,7 @@ channels = {'XX', 'Cu', 'Zn', 'Pbli', 'Pbla', 'Pblb', 'Ca', 'Br', 'Mn', 'Fe', 'T
   <h3>WxWidgets?</h3>
   <ul>
     <li>Seems a bit odd having a x-platform library built on a x-platform library...</li>
-    <li>Plenty of forum posts indicating flakiness</li>
-    <li>Doesn't seem to be included in any of the matplotlib Windows distributions</li>
+    <li>Plenty of posts indicating flakiness when dealing with non-trivial stuff</li>
   </ul>
 </div>
 </section>
