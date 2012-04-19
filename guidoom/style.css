@@ -66,6 +66,12 @@ dl.compact dd {
   float: left;
   width: 79%;
 }
+.deck-container q {
+  quotes: "“" "”";
+}
+.deck-container q:before { content: open-quote }
+.deck-container q:after  { content: close-quote }
+
 
 @media print {
   .theme-menu {
