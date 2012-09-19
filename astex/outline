@@ -1,0 +1,17 @@
+* Remember ElementTreeFactory?
+* Quick recap... make code that produces a document match the *structure* of the document
+* Remember one of the strengths of ElementTreeFactory? Sub-class it and override to custom the output
+* Could we make it produce LaTeX instead?
+* Well ... erm ... no
+* But we could write a set of classes that look more or less like ElementTreeFactory which *do* produce LaTeX
+* Introducing AsTeX - it's like ElementTreeFactory but for LaTeX (and XML - ahem)
+* Horribly specific to a particular problem domain but probably simple to customize for others (he says without having actually tried it)
+* Produces very nice PDFs as a result, including :
+  - TOCs
+  - indexes
+  - left/right margins
+  - syntax highlighted code
+  - fancy tables (in several styles! oooooh!)
+* Also capable of producing a very readable XML markup which reflects the TeX document structure
+* Download it today kids! Well ... once I've gotten off my ass and packaged it anyway ... anyone actually interested in this shit?
+

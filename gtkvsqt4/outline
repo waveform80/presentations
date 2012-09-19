@@ -1,0 +1,22 @@
+* Gtk (3) vs PyQt4/PySide
+* Quick summary: Gtk's controls and abstractions rock but Glade is *awful*
+* Reminiscences: Glade=MS Visual Studio, Qt4 Designer=Delphi
+* Gtk framework is bloody annoying when it comes to getting references - either construct manually or make shit loads of builder.get_object() calls
+* Gtk documentation is utterly shit compared to Qt's
+* Gtk GUI designer (Glade) crashes like it's going out of fashion (6 times in a single hour?! For something as simple as moving a goddamn row in a table?!)
+* That said, Gtk's underlying design - abstractions and what-not, rocks:
+  - Compare Qt4's bizarre double-spinbox and spinbox but lack of double-slider to Gtk's abstraction of an "adjustment"
+  - Demonstrate Glade vs Qt4 designer's tab order manipulation
+  - Demonstrate Glade vs Qt4 designer's association of labels with controls
+  - Demonstrate how to crash Glade really easily
+* Gtk3 ... not on Windows yet (really cross platform? Erm not until you port it guys)
+* PyQt4 vs PySide - licensing fun, but actually it's really easy to work with both
+* It seems the windows community has already decided: Qt (Gtk's not included in the two major "feature-packed" distros: EPD and PythonXY)
+* Personal whinges:
+  - using Gtk means using Ubuntu's stupid thin scroll bars
+  - Glade 2 and 3 - Glade 2 doesn't work on Ubuntu (at least from Unity - not Glade's fault - stupid packagers)
+* Conclusion:
+  - If Gtk fixed their bloody designer I'd support them whole-heartedly (despite the lack of everything else, Windows support et al)
+  - But they don't support the users (no windows support) or the developers (no decent docs, no working glade), so screw it
+  - Not to mention they keep changing everything in horribly incompatible ways and not documenting it
+  - In other words, they're a bunch of bloody minded purists ... not at all like me ... ahem
