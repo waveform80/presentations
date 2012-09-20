@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>AsTeX</title>
+
+  <meta name="description" content="Generating LaTeX for PDFs in Python">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>AsTeX</h1>
+</section>
+
+<section class="slide" id="why">
+<h2>Why?</h2>
+<ul>
+  <li>Needed to generate documents with paragraphs of text</li>
+  <li>... and tables of contents</li>
+  <li>... and tables!</li>
+  <li>... and diagrams, and images, etc. etc.</li>
+</ul>
+</section>
+
+<section class="slide" id="how">
+<h2>How</h2>
+<ul>
+  <li>ReportLab only does this in the paid version :(</li>
+  <li>TeX invented by Uncle Knuth (ergo it must be good!)</li>
+  <li>Generates beautiful PDFs with many bells and whistles</li>
+</ul>
+</section>
+
+<section class="slide" id="recap">
+<h2>ElementTreeFactory</h2>
+<ul>
+  <li>Quick re-cap of ElementTreeFactory basics</li>
+  <li>(shamelessly stolen from Genshi)</li>
+</ul>
+</section>
+
+<section class="slide" id="input1">
+<h2>This code...</h2>
+<span style="font-size: 14pt;">
+<pre>
+some_list = ['foo', 'bar', 'baz']
+print(tostring(
+    tag.html(
+        tag.head(
+            tag.title('My document title')
+        ),
+        tag.body(
+            tag.h1('A heading', class_="heading"),
+            tag.p('This is a paragraph'),
+            tag.ul(
+                tag.li('Item %d = %s' % (n, item))
+                for (n, item) in enumerate(some_list)
+            )
+        )
+    )
+))
+</pre>
+</span>
+</section>
+
+<section class="slide" id="output1">
+<h2>Produces this XML...</h2>
+<span style="font-size: 14pt;">
+<pre>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;My document title&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1 class="heading"&gt;A heading&lt;/h1&gt;
+        &lt;p&gt;This is a paragraph&lt;/p&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Item 0 = foo&lt;/li&gt;
+            &lt;li&gt;Item 1 = bar&lt;/li&gt;
+            &lt;li&gt;Item 2 = baz&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>(okay, without the pretty indentation)</p>
+</span>
+</section>
+
+<section class="slide" id="idea1">
+<h2>Err ... wasn't this about LaTeX?</h2>
+<ul>
+  <li>Document structure of LaTeX can be represented by a tree structure</li>
+  <li>Remember methods in ElementTreeFactory can be overridden to produce different output</li>
+  <li class="slide">... but it's far to complex to do that for all of TeX</li>
+  <li class="slide">... but I could write something with the same interface!</li>
+</ul>
+</section>
+
+<section class="slide" id="input2">
+<h2>This code...</h2>
+<span style="font-size: 14pt;">
+<pre>
+some_list = ['foo', 'bar', 'baz']
+print(tex(
+    tag.document(
+        tag.topmatter(
+            title='My document title',
+            author_name='Fred Flintstone'
+        ),
+        tag.section(
+            tag.p('This is a paragraph'),
+            tag.ul(
+                tag.li('Item %d = %s' % (n, item))
+                for (n, item) in enumerate(some_list)
+            ),
+            title='A heading'
+        )
+    )
+))
+</pre>
+</span>
+</section>
+
+<section class="slide" id="output2">
+<h2>Produces this LaTeX...</h2>
+<span style="font-size: 10pt;">
+<pre>
+\documentclass[10]{article}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[paper=a4paper]{geometry}
+\usepackage{fixltx2e}
+\usepackage{color}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[bookmarks=true,unicode=true]{hyperref}
+\usepackage[all]{hypcap}
+\hypersetup{
+    colorlinks=true,%
+    linkcolor=black,%
+    citecolor=black,%
+    filecolor=blue,%
+    urlcolor=blue}
+\begin{document}
+\title{My document title}
+\author{Fred Flintstone}
+\maketitle 
+
+\newpage 
+\section{A heading}
+This is a paragraph
+
+\begin{itemize}
+
+\item Item 0 = foo
+\item Item 1 = bar
+\item Item 2 = baz
+\end{itemize}
+
+\end{document}
+</pre>
+</span>
+</section>
+
+<section class="slide" id="pdf-generation">
+<h2>Err ... wasn't this about PDFs?</h2>
+<p>How to make an actual PDF out of this...</p>
+<pre>
+pdflatex test.tex
+</pre>
+<p>Repeat ad nauseum...</p>
+</section>
+
+<section class="slide" id="conclusion">
+<h2>Conclusion</h2>
+<ul>
+  <li>Holy crap! It works!</li>
+  <li>Code is pretty specific compared to XML-based ElementTreeFactory</li>
+  <li>But it makes generating LaTeX <em>really</em> easy</li>
+  <li><span style="font-size: 12pt;">and I haven't unit-tested or packaged it yet ... ahem</span></li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
