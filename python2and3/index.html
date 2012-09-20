@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Python 2 and 3 without Six</title>
+
+  <meta name="description" content="Supporting Python 2 and 3 with one codebase and no extra deps">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>2 + 3 - 6</h1>
+</section>
+
+<section class="slide" id="why">
+<h2>Why?</h2>
+<ul>
+  <li>Because I'm Lazy (remember, this is a Good Thing)</li>
+  <li>2to3 is okay, but fails in a few annoying ways</li>
+  <li>Six is okay, but adds something I'll only have to remove later</li>
+</ul>
+</section>
+
+<section class="slide" id="how1">
+<h2>How? (non-code bits)</h2>
+<ol>
+  <li>Give up on compatibility with Python &lt; 2.6</li>
+  <li>It's not horribly unreasonable (2.6 or above is now default on most common platforms)</li>
+</ol>
+</section>
+
+<section class="slide" id="how2">
+<h2>How? (code bits)</h2>
+<ol>
+  <li>Add a full complement of <code>from __future__</code> imports to all your modules</li>
+  <li>Make all strings compatible (<code>u''</code> to <code>''</code>)</li>
+  <li>Make all print statements functions (<code>print ''</code> to <code>print('')</code>)</li>
+  <li>Make all relative imports absolute (you were using relative imports? Tut tut)</li>
+  <li>Grep for any division operators and check their type</li>
+</ol>
+</section>
+
+<section class="slide" id="examples1">
+<h2>Example</h2>
+<span style="font-size: 14pt;">
+<pre>
+from __future__ import (
+    unicode_literals,
+    print_function,
+    absolute_import,
+    division,
+    )
+
+from rastools.raspase import RasParser
+# ^--- absolute import
+
+print('Some stuff')
+# ^--- using print function
+</pre>
+</span>
+</section>
+
+<section class="slide" id="testing1">
+<h2>What Next?</h2>
+<ul>
+  <li>Test with a python2 virtualenv sandbox</li>
+  <li>Test with a python3 virtualenv sandbox</li>
+  <li>Fix stuff</li>
+  <li>Test again</li>
+  <li>And again...</li>
+  <li>Repeat until you're utterly sick of testing</li>
+</ul>
+</section>
+
+<section class="slide" id="testing2">
+<h2>Stuff you'll probably find</h2>
+<ul>
+  <li>Import renames (yes, six is useful here - but either way you're going to have stuff to remove later)</li>
+  <li>If you use renames yourself, choose the python 3 names (duh)</li>
+  <li>Strings vs bytes in a few places (anything using struct?)</li>
+</ul>
+</section>
+
+<section class="slide" id="examples2">
+<h2>Example</h2>
+<span style="font-size: 14pt;">
+<pre>
+from PIL import Image
+try:
+    # XXX Py2 only
+    from cStringIO import StringIO
+except ImportError:
+    # XXX Py2 only
+    from StringIO import StringIO
+except ImportError:
+    # XXX Py3 only
+    from io import StringIO
+</pre>
+</span>
+</section>
+
+<section class="slide" id="examples3">
+<h2>More Examples!</h2>
+<span style="font-size: 14pt;">
+<pre>
+try:
+    self._file = open(filename_or_obj, 'w')
+except TypeError:
+    self._file = filename_or_obj
+</pre>
+<p>Instead of:</p>
+<pre>
+if isinstance(filename_or_obj, basestring):
+    self._file = open(filename_or_obj, 'w')
+else:
+    self._file = filename_or_obj
+</pre>
+</span>
+</section>
+
+<section class="slide" id="packaging">
+<h2>Packaging</h2>
+<ul>
+  <li>Very little to do:</li>
+  <li>Remove any 2to3 reference in setup.py</li>
+  <li>Add a Trove classifier for Python 3</li>
+  <li>Make a .deb (what do you mean you haven't got one?!)</li>
+  <li>Profit!</li>
+</ul>
+</section>
+
+<section class="slide" id="conclusion">
+<h2>Conclusion</h2>
+<ul>
+  <li>Either way you're going to have some stuff to remove later</li>
+  <li>The trick is to keep it to a minimum</li>
+  <li>Remember: be lazy!</li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
