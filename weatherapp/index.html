@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Weather App / Pyramid Demo</title>
+
+  <meta name="description" content="A short Pyramid demo for programmatically altered animated SVGs">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>Weather App</h1>
+</section>
+
+<section class="slide" id="init">
+<h2>Creating a Pyramid Project</h2>
+<ul>
+  <li><tt>virtualenv sandbox; source sandbox/bin/activate</tt> ... naturally</li>
+  <li><tt>pip install pyramid</tt> (but we won't because it takes ages)</li>
+  <li><tt>pcreate -s starter demo</tt></li>
+</ul>
+</section>
+
+<section class="slide" id="config">
+<h2>Configuration</h2>
+<ul>
+  <li><tt>vim development.ini</tt></li>
+  <li>What does it load? (apps and tweens)</li>
+  <li>Where does it load it? (hosts and ports)</li>
+  <li>How does it log stuff?</li>
+</ul>
+</section>
+
+<section class="slide" id="run1">
+<h2>Let's Run It!</h2>
+<ul>
+  <li><tt>pserve development.ini --reload</tt></li>
+  <li>What does <tt>--reload</tt> do?</li>
+  <li>What's that DT thing?!</li>
+</ul>
+</section>
+
+<section class="slide" id="templates1">
+<h2>Templates! Routes! And Stuff!</h2>
+<ul>
+  <li>Let's edit the content! (in <tt>demo/templates/mytemplate.pt</tt>)</li>
+  <li>And add an &lt;img&gt; link to a new route!</li>
+  <li>And define that route! (in <tt>demo/__init__.py</tt>)</li>
+  <li>And define a view for that route! (in <tt>demo/views.py</tt>)</li>
+</ul>
+</section>
+
+<section class="slide" id="templates1">
+<h2>Templates!</h2>
+<ul>
+  <li>Let's edit the content! (in <tt>demo/templates/mytemplate.pt</tt>)</li>
+  <li>Smaller header (class=top-small)</li>
+  <li>And add an &lt;img&gt; link to a new route!</li>
+  <li>And define that route! (in <tt>demo/__init__.py</tt>)</li>
+  <li>And define a view for that route! (in <tt>demo/views.py</tt>)</li>
+</ul>
+</section>
+
+<section class="slide" id="art1">
+<h2>Art Time!</h2>
+<ul>
+  <li>Time for Dave's awesome art skillz...</li>
+  <li>And after that some XML</li>
+  <li>... including defining IDs on elements</li>
+  <li>... and adding animateTransform elements</li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
