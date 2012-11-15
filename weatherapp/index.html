@@ -35,7 +35,7 @@
 </section>
 
 <section class="slide" id="init">
-<h2>Creating a Pyramid Project</h2>
+<h2>First Steps</h2>
 <ul>
   <li><tt>virtualenv sandbox; source sandbox/bin/activate</tt> ... naturally</li>
   <li><tt>pip install pyramid</tt> (but we won't because it takes ages)</li>
@@ -54,8 +54,9 @@
 </section>
 
 <section class="slide" id="run1">
-<h2>Let's Run It!</h2>
+<h2>Runtime!</h2>
 <ul>
+  <li><tt>python setup.py develop</tt></li>
   <li><tt>pserve development.ini --reload</tt></li>
   <li>What does <tt>--reload</tt> do?</li>
   <li>What's that DT thing?!</li>
@@ -63,33 +64,37 @@
 </section>
 
 <section class="slide" id="templates1">
-<h2>Templates! Routes! And Stuff!</h2>
+<h2>Templates</h2>
 <ul>
   <li>Let's edit the content! (in <tt>demo/templates/mytemplate.pt</tt>)</li>
-  <li>And add an &lt;img&gt; link to a new route!</li>
-  <li>And define that route! (in <tt>demo/__init__.py</tt>)</li>
-  <li>And define a view for that route! (in <tt>demo/views.py</tt>)</li>
+  <li>Smaller header (<tt>class=top-small</tt>)</li>
+  <li>And add an <tt>&lt;img&gt;</tt> link to a new route!</li>
 </ul>
 </section>
 
-<section class="slide" id="templates1">
-<h2>Templates!</h2>
+<section class="slide" id="views1">
+<h2>Views</h2>
 <ul>
-  <li>Let's edit the content! (in <tt>demo/templates/mytemplate.pt</tt>)</li>
-  <li>Smaller header (class=top-small)</li>
-  <li>And add an &lt;img&gt; link to a new route!</li>
-  <li>And define that route! (in <tt>demo/__init__.py</tt>)</li>
-  <li>And define a view for that route! (in <tt>demo/views.py</tt>)</li>
+  <li>Now we define that route (in <tt>demo/__init__.py</tt>)</li>
+  <li>And define a view for that route (in <tt>demo/views.py</tt>)</li>
 </ul>
 </section>
 
 <section class="slide" id="art1">
-<h2>Art Time!</h2>
+<h2>Time for ... the gallery</h2>
 <ul>
-  <li>Time for Dave's awesome art skillz...</li>
-  <li>And after that some XML</li>
+  <li>Time for Dave's awesome art skills!</li>
+  <li>... and after that some XML</li>
   <li>... including defining IDs on elements</li>
   <li>... and adding animateTransform elements</li>
+</ul>
+</section>
+
+<section class="slide" id="class1">
+<h2>ET's art skills</h2>
+<ul>
+  <li>Now to construct a class that can manipulate the picture</li>
+  <li>... and fill in that view we made earlier</li>
 </ul>
 </section>
 
