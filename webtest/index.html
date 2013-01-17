@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>WebTest</title>
+
+  <meta name="description" content="WebTest - what it says on the tin">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>WebTest</h1>
+</section>
+
+<section class="slide" id="what">
+<h2>What?</h2>
+<ul>
+  <li>A <em>functional</em> testing framework for WSGI applications</li>
+  <li>A <em>really simple</em> testing framework</li>
+  <li>Available from <a href="http://webtest.pythonpaste.org/en/latest/">http://webtest.pythonpaste.org/en/latest/</a></li>
+</ul>
+</section>
+
+<section class="slide" id="why">
+<h2>Why?</h2>
+<ul>
+  <li>I mean: why bother with functional testing?</li>
+  <ul>
+    <li>With WebTest, they're easier to write than unit tests</li>
+    <li>I typically get better coverage than with unit tests</li>
+    <li>I usually find more bugs than with unit tests</li>
+    <li class="slide">... maybe I'm just crap at writing unit tests ...</li>
+  </ul>
+</ul>
+</section>
+
+<section class="slide" id="how">
+<h2>How?</h2>
+<ol>
+  <li>Use your web application</li>
+  <li>Note what you click on and what you fill in</li>
+  <li>Try and break stuff</li>
+  <li>Convert your notes to code</li>
+</ol>
+<p class="slide">... this last step is easier than it sounds ...</p>
+</section>
+
+<section class="slide" id="demo">
+<h1>Demo Time!</h1>
+</section>
+
+<section class="slide" id="recap">
+<h2>Quick Recap</h2>
+<ul>
+  <li>To get a URL use the <tt>.get()</tt> method</li>
+  <li>To click on a link use the <tt>.click()</tt> method</li>
+  <li>To access the form on the page use the <tt>.form</tt> attribute</li>
+  <li>To follow a redirect use the <tt>.follow()</tt> method</li>
+</ul>
+<p class="slide">Yeah ... I don't really need to go on ...</p>
+</section>
+
+<section class="slide" id="extensions">
+<h2>What else?</h2>
+<ul>
+  <li>Imagine a WSGI app that simply performed the requests passed to it</li>
+  <li>Scraping?</li>
+  <li>Pen testing?</li>
+  <li>Fuzzing?</li>
+  <li>Yeah, there's probably other libraries for doing these already - but with
+  WebTest and a little proxy WSGI app you could whip up the same thing in
+  minutes!</li>
+</ul>
+</section>
+
+<section class="slide" id="conclusion">
+<h2>Conclusion</h2>
+<ul>
+  <li>Get to <a href="http://webtest.pythonpaste.org/en/latest/">http://webtest.pythonpaste.org/en/latest/</a></li>
+  <li>Play!</li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
