@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Reverse Engineering</title>
+
+  <meta name="description" content="Reverse engineering workshop">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>Reverse Engineering</h1>
+</section>
+
+<section class="slide" id="steps">
+<h2>Steps</h2>
+<ol>
+  <li>Read up on the subject</li>
+  <li>Snoop the protocol</li>
+  <li>Take educated guesses</li>
+  <li>Experiment</li>
+  <li>Rinse and repeat...</li>
+</ol>
+</section>
+
+<section class="slide" id="read">
+<h2>Read up on the subject</h2>
+<ul>
+  <li>Google!</li>
+  <li>Get any manuals you can and read them</li>
+  <li>Trawl any knowledge-base or tech support forums for details</li>
+</ul>
+</section>
+
+<section class="slide" id="snoop">
+<h2>Snoop the protocol</h2>
+<ul>
+  <li>For ethernet: Ethereal/Wireshark</li>
+  <li>For USB: ???</li>
+  <li>For serial: socat</li>
+  <li>... actually socat's good for lots of things</li>
+  <li>... but not perfect - you should try writing your own too</li>
+</ul>
+</section>
+
+<section class="slide" id="guess">
+<h2>Take educated guesses</h2>
+<ul>
+  <li>Compare the protocol to any UI elements</li>
+  <li>Search for common strings in docs from step 1</li>
+  <li>Think what you'd do if you were writing the system</li>
+  <li>... but assume your crappy v0.1 is in production and you never got a
+  chance to bugfix it</li>
+</ul>
+</section>
+
+<section class="slide" id="vary">
+<h2>Experiment</h2>
+<ul>
+  <li>Vary UI elements one at a time and see what changes</li>
+  <li>Feed deliberate crap to the UI/unit and see what happens</li>
+  <li>See if you can emulate the unit well enough to fool the unit</li>
+</ul>
+</section>
+
+<section class="slide" id="repeat">
+<h2>Rinse and repeat</h2>
+<ul>
+  <li>Did it work?</li>
+  <li>Keep going until it does!</li>
+</ul>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>
