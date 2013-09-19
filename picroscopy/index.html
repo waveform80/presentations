@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Picroscopy App</title>
+
+  <meta name="description" content="A short demo for Python 3 webapps on a Raspberry Pi">
+  <meta name="author" content="Dave Hughes">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <!-- Core and extension CSS files -->
+  <link rel="stylesheet" href="../core/deck.core.css">
+  <link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+  <link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+  <link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" href="../extensions/status/deck.status.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+
+  <!-- Theme CSS files (menu swaps these out) -->
+  <link rel="stylesheet" href="../themes/style/web-2.0.css">
+
+  <!-- Custom CSS just for this page -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shCore.css">
+  <link rel="stylesheet" href="../syntaxhighlighter_3.0.83/styles/shThemeDefault.css">
+
+  <script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+<h1>Picroscopy</h1>
+</section>
+
+<section class="slide" id="whoami">
+<h2>Whoami</h2>
+<ul>
+  <li>Dave Jones (/Hughes)</li>
+  <li>Email: <tt>dave@waveform.org.uk</tt></li>
+  <li>Twitter: <tt>@waveform80</tt></li>
+  <li>Homepage: <a href="http://www.waveform.org.uk/">http://www.waveform.org.uk/</a></li>
+  <li>Code: <a href="https://github.com/waveform80">https://github.com/waveform80</a></li>
+</ul>
+</section>
+
+<section class="slide" id="init">
+<h2>First Steps</h2>
+<ul>
+  <li><tt>virtualenv -p python3 picroscopyenv # of course!</tt></li>
+  <li><tt>source picroscopyenv/bin/active</tt></li>
+  <li><tt>easy_install webob chameleon wheezy.routing</tt></li>
+  <li><tt>easy_install ipython pudb # because they're nice!</tt></li>
+</ul>
+</section>
+
+<section class="slide" id="config">
+<h2>Two Parts</h2>
+<ul>
+  <li>Camera
+  <ul>
+    <li>Shows preview</li>
+    <li>Capture image</li>
+  </ul></li>
+  <li>Web app
+  <ul>
+    <li>Serves page showing captured images</li>
+    <li>Provides button to capture new images</li>
+  </ul></li>
+</ul>
+</section>
+
+<section class="slide" id="code1">
+<h2>Coding Time - Part 1!</h2>
+<ul>
+  <li>Write a PicroscopyCamera class</li>
+  <li>Test it!</li>
+</ul>
+</section>
+
+<section class="slide" id="http">
+<h2>Interval - a bit about HTTP</h2>
+<ul>
+  <li>What happens when you retrieve a web-page?</li>
+  <li>The genius of the Internet: text protocols!</li>
+</ul>
+</section>
+
+<section class="slide" id="http">
+<h2>Interval - about dynamic pages</h2>
+<ul>
+  <li>Who says HTML pages have to be static?!</li>
+  <li>What generates the HTML?</li>
+  <li>How do apps chat to web servers?</li>
+</ul>
+</section>
+
+<section class="slide" id="code2">
+<h2>Coding Time - Part 2!</h2>
+<ul>
+  <li>Write a PicroscopyWsgi class</li>
+  <li>Test it!</li>
+</ul>
+</section>
+
+<section class="slide" id="conclusion1">
+<h2>Conclusion</h2>
+<ul>
+  <li>No magic!</li>
+  <li>Code on GitHub:<br /><a href="https://github.com/waveform80/picroscopy">https://github.com/waveform80/picroscopy</a></li>
+</ul>
+</section>
+
+<section class="slide" id="questions1">
+<h1>Questions?</h1>
+</section>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+  <span class="deck-status-current"></span>
+  /
+  <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+  <label for="goto-slide">Go to slide:</label>
+  <input type="number" name="slidenum" id="goto-slide">
+  <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script src="../syntaxhighlighter_3.0.83/scripts/shBrushMatlabSimple.js"></script>
+<script src="base.js"></script>
+
+</body>
+</html>

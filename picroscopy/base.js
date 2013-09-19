@@ -1,0 +1,3 @@
+$.deck('.slide');
+
+SyntaxHighlighter.all()

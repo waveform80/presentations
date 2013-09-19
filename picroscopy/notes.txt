@@ -1,0 +1,42 @@
+Part 1:
+
+subprocess
+wait after capture!
+check rc of bins!
+
+###########################################
+
+Part 2:
+
+from wsgiref.util import FileWrapper
+from camera import PicroscopyCamera
+from wheezy.routing import PathRouter, url
+from chameleon import PageTemplateLoader
+
+self.camera = PicroscopyCamera()
+self.router = PathRouter()
+self.templates = PageTemplateLoader(templates_dir, default_extension='.pt')
+
+PathRouter.add_routes([
+    url('/', self.do_template, kwargs={'page': 'library'}, name='home'), # LATER!
+    url('/{page}.html', self.do_template, name='template'),
+    url('/thumb/{image}', self.do_thumb, name='thumb'),
+    ...
+    ])
+
+handler, kwargs = PathRouter.match(req.path_info)
+
+resp = handler(req, **kwargs) OR resp = e
+resp(environ, start_response)
+
+template = self.templates[page]
+template(req=req, self=self)
+
+
+#######################################################
+
+Template:
+
+<li tal:repeat="img camera"><img src="${router.path_for('image', image=img)}" width="200" /></li>
+
+<a href="${router.path_for('capture')}">Capture!</a>
