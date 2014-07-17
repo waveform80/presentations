@@ -30,8 +30,6 @@
           <div class="stacked-center">
             <h1>Utilizing Inline Motion Vector Estimates from an H.264 Encoder to Implement Motion Detection</h1>
             <h2>or Motion Detection Made Easy</h2>
-            <p>A presentation by <a href="https://twitter.com/waveform80"
-            target="_blank">Dave Jones (@waveform80)</a></p>
             <p>Press <strong>Down</strong> to continue, or <strong>Swipe
             Up</strong> if you prefer.</p>
           </div>
@@ -99,7 +97,9 @@
       <div id="/section-2/page-1" class="ft-page" data-id="page-1">
         <h1>The Data!</h1>
         <p>For each frame, Pi's camera produces a stream of inline motion data.
-        Consists of X, Y, and SAD values for each macro-block:</p>
+        Consists of X, Y, and <a
+        href="http://en.wikipedia.org/wiki/Sum_of_absolute_differences">SAD</a>
+      values for each macro-block:</p>
         <pre data-src="motion-struct.c"></pre>
       </div>
       <div id="/section-2/page-2" class="ft-page" data-id="page-2">
@@ -111,7 +111,8 @@
       </div>
       <div id="/section-2/page-3" class="ft-page" data-id="page-3">
         <h1>The Code!</h1>
-        <p>The picamera library does most of the tedious stuff...</p>
+        <p>The <a href="http://picamera.readthedocs.org/">picamera</a> library
+        does most of the tedious stuff (since 1.5)&hellip;</p>
         <pre data-src="motion-picamera1.py"></pre>
       </div>
       <div id="/section-2/page-3" class="ft-page" data-id="page-3">
@@ -128,8 +129,12 @@
         <h1>Future Work</h1>
         <p>Left as an exercise for the reader...</p>
         <ul>
-          <li>Use SAD values to filter <q>good</q> blocks</li>
-          <li>Define features in motion (convex hull?)
+          <li>Use <a href="http://en.wikipedia.org/wiki/Sum_of_absolute_differences">SAD</a> values to filter <q>good</q> blocks</li>
+          <li>Define features in motion (<a
+          href="http://docs.scipy.org/doc/scipy-dev/reference/generated/scipy.spatial.ConvexHull.html">convex
+        hull?</a> <a
+      href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.measurements.label.html">feature
+    labelling?</a>)
           <ul>
             <li>to ignore lighting effects</li>
             <li>... and cats</li>
@@ -147,6 +152,9 @@
         <p>The author: <a href="mailto:dave@waveform.org.uk">dave@waveform.org.uk</a></p>
         <P>The Twitter feed: <a href="https://twitter.com/waveform80">@waveform80</a></p>
         <p>Now go play with this and make something interesting!</p>
+        <iframe id="yt-player" class="youtube-player" type="text/html"
+          width="420" height="315" src="http://www.youtube.com/embed/wl8vILrJBoM"
+          frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
   </div>
@@ -164,11 +172,21 @@
     // Flowtime.sectionsSlideToTop(true);
     // Flowtime.gridNavigation(false);
     // Flowtime.useOverviewVariant(true);
-    Flowtime.parallaxInPx(true);
-    //
+    // Flowtime.parallaxInPx(true);
+
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('yt-player');
+    }
+
     // event management
-    // Flowtime.addEventListener("flowtimenavigation", onNavigation, false);
-    Flowtime.onNavigation(onNavigation);
+    Flowtime.addEventListener("flowtimenavigation", onNavigation, false);
+    //Flowtime.onNavigation(onNavigation);
     function onNavigation(e)
     {
         // console.log(cacheTitle + ' > ' + document.title.replace("Flowtime.js | ", ""));
@@ -185,6 +203,8 @@
         //console.log('progress:', e.progress, 'total:', e.total);
         // var value = Math.round(e.progress * 100 / e.total);
         // console.log('Completion: ' + value + '%');
+        console.log('Trying to stop YouTube video');
+        player.stopVideo();
     }
     // starts the application with configuration options
     Flowtime.start();
