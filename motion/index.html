@@ -38,23 +38,115 @@
         </div>
       </div>
       <div id="/section-1/page-2" class="ft-page" data-id="page-2">
-        <h1>Page 1</h1>
+        <h1>A Brief Introduction to Video Encoding</h1>
         <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-          <li>Item 3</li>
+          <li>Video is just lots of images</li>
+          <li class="ft-fragment">Simple encoders just encode lots of images (MJPEG):
+          <br />
+          <br />
+          <span class="ft-fragment">JPEG</span>
+          <span class="ft-fragment">JPEG</span>
+          <span class="ft-fragment">JPEG</span>
+          <span class="ft-fragment">JPEG JPEG JPEG JPEG JPEG</span>
+          </li>
+          <li class="ft-fragment">Complex encoders exploit similarity of images (MPEG):
+          <br />
+          <br />
+          <span class="ft-fragment">I-Frame</span>
+          <span class="ft-fragment">P-Frame</span>
+          <span class="ft-fragment">B-Frame</span>
+          <span class="ft-fragment">B-Frame P-Frame B-Frame</span>
+          </li>
         </ul>
+      </div>
+      <div id="/section-1/page-3" class="ft-page" data-id="page-3">
+        <h1>MPEG I-Frames</h1>
+        <p>Simplest frame type: it's just a picture. Also known as a <q>key
+          frame</q></p>
+        <img src="iframe.svg" width="1000">
+      </div>
+      <div id="/section-1/page-4" class="ft-page" data-id="page-4">
+        <h1>MPEG P-Frames</h1>
+        <p>Stores what changed since the last frame. Useful!</p>
+        <img src="pframe.svg" width="1000">
+      </div>
+      <div id="/section-1/page-5" class="ft-page" data-id="page-5">
+        <h1>MPEG B-Frames</h1>
+        <p>Like P-Frames, but with time travel.</p>
+        <div class="stack">
+          <div class="stacked"><img src="bframe.svg" width="1000"></div>
+          <div class="ft-fragment stacked"><img src="scrawl.svg" width="1000"></div>
+        </div>
+      </div>
+      <div id="/section-1/page-6" class="ft-page" data-id="page-6">
+        <h1>Motion Estimation</h1>
+        <p>Every frame, GPU calculates which macro blocks moved where.</p>
+        <img src="vectors.svg" width="1000">
+      </div>
+      <div id="/section-1/page-7" class="ft-page" data-id="page-7">
+        <h1>Limitations</h1>
+        <ul>
+          <li><strong>Very crude</strong> estimate</li>
+          <li>Doesn't try and identify features</li>
+          <li>Based solely on similarity of blocks</li>
+          <li>2D vector only, doesn't attempt to infer rotation, Z-motion, etc.</li>
+        </ul>
+        <img src="ed_vector.png">
       </div>
     </div>
 
     <div class="ft-section" data-id="section-2">
       <div id="/section-2/page-1" class="ft-page" data-id="page-1">
-        <h1>Section 2</h1>
-        <p>This should appear across from the title page</p>
+        <h1>The Data!</h1>
+        <p>For each frame, Pi's camera produces a stream of inline motion data.
+        Consists of X, Y, and SAD values for each macro-block:</p>
+        <pre data-src="motion-struct.c"></pre>
       </div>
       <div id="/section-2/page-2" class="ft-page" data-id="page-2">
-        <h1>Code Highlighting</h1>
-        <pre data-src="test.py"></pre>
+        <h1>The Code!</h1>
+        <div class="stack">
+          <pre class="stacked" data-src="motion-load.py"></pre>
+          <img class="ft-fragment stacked" src="scrawl.svg" width="1000">
+        </div>
+      </div>
+      <div id="/section-2/page-3" class="ft-page" data-id="page-3">
+        <h1>The Code!</h1>
+        <p>The picamera library does most of the tedious stuff...</p>
+        <pre data-src="motion-picamera1.py"></pre>
+      </div>
+      <div id="/section-2/page-3" class="ft-page" data-id="page-3">
+        <h1>How to detect motion</h1>
+        <p>Crude first steps...</p>
+        <pre data-src="motion-picamera2.py"></pre>
+      </div>
+      <div id="/section-2/page-3" class="ft-page" data-id="page-3">
+        <h1>Refinements</h1>
+        <p>How about a histogram of magnitudes?</p>
+        <pre data-src="motion-picamera3.py"></pre>
+      </div>
+      <div id="/section-2/page-3" class="ft-page" data-id="page-3">
+        <h1>Future Work</h1>
+        <p>Left as an exercise for the reader...</p>
+        <ul>
+          <li>Use SAD values to filter <q>good</q> blocks</li>
+          <li>Define features in motion (convex hull?)
+          <ul>
+            <li>to ignore lighting effects</li>
+            <li>... and cats</li>
+          </ul>
+          </li>
+          <li>Combine with image data (e.g. ignore certain colours?)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-section" data-id="section-2">
+      <div id="/section-3/page-1" class="ft-page" data-id="page-1">
+        <h1>Thank You!</h1>
+        <p>The picamera library: <a href="http://picamera.readthedocs.org/">picamera.readthedocs.org</a></p>
+        <p>The author: <a href="mailto:dave@waveform.org.uk">dave@waveform.org.uk</a></p>
+        <P>The Twitter feed: <a href="https://twitter.com/waveform80">@waveform80</a></p>
+        <p>Now go play with this and make something interesting!</p>
       </div>
     </div>
   </div>
