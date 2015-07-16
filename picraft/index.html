@@ -1,0 +1,270 @@
+<html lang="en">
+  <head>
+    <meta chatset="utf-8">
+    <title>Picraft - What, Why, and How?!</title>
+    <meta name="description" content="A talk about why picraft came to be, what it is, and how it's built">
+    <meta name="author" content="Dave Jones">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/solarized.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+    <script>
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../reveal.js/' + (window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css');
+document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <style type="text/css">
+.reveal section img.inline {
+  display: inline;
+  border: 0 none;
+  box-shadow: none;
+  max-height: 1em;
+  vertical-align: middle;
+}
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <h1><img class="inline" src="logo.png"> Picraft</h1>
+            <h2>What, Why, and How?!</h2>
+          </section>
+          <section>
+            <h2>Vital Statistics</h2>
+            <dl>
+              <dt>Name</dt><dd>Dave Jones</dd>
+              <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+              <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+            </dl>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>What is Picraft?</h2>
+            <p>A Python library for querying and manipulating the Minecraft world</p>
+          </section>
+          <section>
+            <img src="hello_minecraft.png">
+          </section>
+          <section>
+            <img src="picraft1.png">
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>But ...</h2>
+            <p>... don't we already have one of those?</p>
+            <small><a href="http://www.stuffaboutcode.com/p/minecraft-api-reference.html">(www.stuffaboutcode.com/p/minecraft-api-reference.html)</a></small>
+          </section>
+          <section>
+            <h2>Contentious Statement #1</h2>
+            <p>Application devs have it easy</p>
+          </section>
+          <section>
+            <ol>
+              <li>Your users are not developers</li>
+              <li>Developers are bastards</li>
+            </ol>
+          </section>
+          <section>
+            <h2>Live Critique Bit</h2>
+          </section>
+          <section>
+            <h2>Are you as anal as Dave?</h2>
+            <p>Let's see how you did...</p>
+          </section>
+          <section>
+            <ul>
+              <li>No docs</li>
+              <li>No tests</li>
+              <li>No packaging/repo</li>
+              <li>Oh ... the code is the docs ... sort of</li>
+              <li>Old style classes</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>camelCaseEveryWhere</li>
+              <li>Scary arg hacks with no purpose</li>
+              <li>Static methods ... why?</li>
+              <li>n-depth flatten ... you never need n-depth flatten</li>
+              <li>n-depth flatten breaks hilariously with unicode</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>Vec3 is mutable</li>
+              <li>Vec3: wot, no len? div? getitem?</li>
+              <li>Vec3: clone ... but not __copy__</li>
+              <li>Vec3: Floor isn't int</li>
+              <li>Block is mutable</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>Block: has a hash?!</li>
+              <li>Event type is mutable</li>
+              <li>... and has unhelpful face</li>
+              <li>Socket isn't configured like the java API</li>
+              <li>Network protocol is scary</li>
+              <li>Protocol implementation on the server is scarier</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>How is picraft any better?</h2>
+            <p>... and did you really have to make it incompatible?!</p>
+          </section>
+          <section>
+            <h2>Contentious Statement #2</h2>
+            <p>Application devs have it <u>really</u> easy</p>
+          </section>
+          <section>
+            <ol>
+              <li>Your users are not developers</li>
+              <li>Developers are crazy</li>
+            </ol>
+          </section>
+          <section>
+            <h2>You make one little camera library...</h2>
+          </section>
+          <section>
+            <ul>
+              <li>Taking pictures</li>
+              <li>Recording video</li>
+              <li>Recording the past</li>
+              <li>Live streaming</li>
+              <li>Offloaded processing</li>
+              <li>Colour detection</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>Historic film restoration</li>
+              <li>Foliage detection</li>
+              <li>Quad-copter navigation</li>
+              <li>Performance art with paintball-guns</li>
+              <li>Measuring light on the ISS</li>
+            </ul>
+          </section>
+          <section>
+            <h2>You make one little Minecraft library...</h2>
+          </section>
+          <section>
+            <h2>Live Demo Bit</h2>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Vital Statistics</h2>
+            <dl>
+              <dt>Name</dt><dd>Dave Jones</dd>
+              <dt>Occupation</dt><dd>Professional Bastard</dd>
+              <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+              <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+            </dl>
+          </section>
+          <section>
+            <h2>Available Now!</h2>
+            <p>from your nearest web-server</p>
+            <a href="http://www.waveform.org.uk/~dave/presentations/picraft/">www.waveform.org.uk/~dave/presentations/picraft/</a>
+          </section>
+          <section>
+            <h2>Thank You</h2>
+            <p>Questions?</p>
+          </section>
+        </section>
+      </div>
+    </div>
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+Reveal.initialize({
+    // The "normal" size of the presentation, scaled here for the notebook
+    width: 800,
+    height: 600,
+
+    // Factor of display size that should remain empty around the content
+    margin: 0.1,
+
+    // Bounds for smallest/largest possible scale to apply to content
+    minScale: 0.2,
+    maxScale: 1.5,
+
+    controls: true,     // Display controls in the bottom right corner
+    progress: true,     // Display a presentation progress bar
+    slideNumber: false, // Display the page number of the current slide
+    history: true,      // Push each slide change to the browser history
+    keyboard: true,     // Enable keyboard shortcuts for navigation
+    overview: true,     // Enable the slide overview mode
+    center: true,       // Vertical centering of slides
+    touch: true,        // Enables touch navigation on devices with touch input
+    loop: false,        // Loop the presentation
+    rtl: false,         // Change the presentation direction to be RTL
+    fragments: true,    // Turns fragments on and off globally
+
+    // Flags if the presentation is running in an embedded mode,
+    // i.e. contained within a limited portion of the screen
+    embedded: false,
+
+    // Flags if we should show a help overlay when the questionmark
+    // key is pressed
+    help: true,
+
+    // Number of milliseconds between automatically proceeding to the
+    // next slide, disabled when set to 0, this value can be overwritten
+    // by using a data-autoslide attribute on your slides
+    autoSlide: 0,
+    // Stop auto-sliding after user input
+    autoSlideStoppable: true,
+
+    mouseWheel: false,               // Enable slide navigation via mouse wheel
+    hideAddressBar: true,            // Hides the address bar on mobile devices
+    previewLinks: false,             // Opens links in an iframe preview overlay
+    transition: 'slide',             // Transition style (none/fade/slide/convex/concave/zoom)
+    transitionSpeed: 'default',      // Transition speed (default/fast/slow)
+    backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
+    viewDistance: 3,                 // Number of slides away from the current that are visible
+
+    // Parallax background image
+    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+    // Parallax background size
+    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+    // Amount to move parallax background (horizontal and vertical) on slide change
+    // Number, e.g. 100
+    parallaxBackgroundHorizontal: '',
+    parallaxBackgroundVertical: '',
+
+    // Optional dependencies
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+        // Syntax highlight for <code> elements
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+        // Speaker notes
+        { src: '../reveal.js/plugin/notes/notes.js', async: true },
+
+        // Remote control your reveal.js presentation using a touch device
+        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
+
+        // MathJax
+        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+    ]
+    });
+    </script>
+  </body>
+</html>
