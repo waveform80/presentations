@@ -1,0 +1,123 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dave's Fake FTSE!</title>
+    <link rel="stylesheet" href="../../foundation5/css/foundation.css" />
+    <script src="../../foundation5/js/vendor/modernizr.js"></script>
+    <style type="text/css">
+.price { text-align: right; }
+.rising { color: green; }
+.falling { color: red; }
+.rising::before { content: "\25b4\a0"; }
+.falling::before { content: "\25be\a0"; }
+.footer {
+  font-size: 8pt;
+  color: #999;
+  padding-top: 1em;
+  margin-top: 1em;
+  border-top: 1px solid #999;
+}
+    </style>
+  </head>
+  <body>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h1>Welcome to Dave's Fake FTSE!</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="medium-9 columns">
+        <p>This page is a small demo for the purpose of Dave's generator
+        workshop. It represents a stock exchange (using historical data for the
+        LSE) which periodically updates its prices. The challenge is to write a
+        generator function which on each iteration yields a dictionary of
+        symbols mapped to prices. Each iteration should only yield when the
+        page has changed (which it does every two seconds, but try to do more
+        than just time it in your function!).</p>
+        <h4 id="market-date">Current market date: ${date.strftime('%A, %B %d %Y')}</h4>
+      </div>
+      <div class="medium-3 columns">
+        <div class="panel callout radius">
+          <p><strong>Hint</strong>: you may want to use a scraper tool like <a
+            href="http://www.crummy.com/software/BeautifulSoup/">Beautiful
+          Soup</a> here instead of trying to parse the raw HTML manually.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" tal:define="split len(state)//2">
+      <div class="medium-6 columns">
+        <table role="grid">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Company Name</th>
+              <th>Price (GBX)</th>
+              <th>Change</th>
+              <th>Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr tal:repeat="symbol sorted(state)[:split]">
+            <span tal:omit-tag="1" tal:define="stock state[symbol]">
+            <td>${stock.symbol}</td>
+            <td>${stock.name}</td>
+            <td class="price">${stock.price}</td>
+            <td class="price ${('nochange', 'rising', 'falling')[sign(stock.change)]}">${'' if stock.change is None else ('%+.3f' % stock.change)}</td>
+            <td>${locale.format('%d', stock.volume, grouping=True)}</td>
+            </span>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="medium-6 columns">
+        <table role="grid">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Company Name</th>
+              <th>Price (GBX)</th>
+              <th>Change</th>
+              <th>Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr tal:repeat="symbol sorted(state)[split:]">
+            <span tal:omit-tag="1" tal:define="stock state[symbol]">
+            <td>${stock.symbol}</td>
+            <td>${stock.name}</td>
+            <td class="price">${stock.price}</td>
+            <td class="price ${('nochange', 'rising', 'falling')[sign(stock.change)]}">${'' if stock.change is None else ('%+.3f' % stock.change)}</td>
+            <td>${locale.format('%d', stock.volume, grouping=True)}</td>
+            </span>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <p class="footer">
+        Copyright &copy; 2015 Dave Jones. All rights reserved, all liabilities
+        denied, all responsibilities shirked. Dave accepts no blame for any
+        profits or losses (however imaginary) that you make as a result of
+        trading on the (entirely historical) data presented by this page. If
+        Dave's seminar tonight turns you into a stock market junkie you have
+        only yourself (and your coding abilities) to blame in the event that
+        you lose your house, cat, children, spouse, etc. On the other hand, if
+        you become a millionaire you might consider buying Dave a pint...</p>
+      </div>
+    </div>
+
+    <script src="../../foundation5/js/vendor/jquery.js"></script>
+    <script src="../../foundation5/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>
