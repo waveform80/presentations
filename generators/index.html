@@ -125,7 +125,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
         </section>
         <section>
           <section>
-            <h2>Task 1: count</h2>
+            <h2>Task 1: sample</h2>
             <p>Write a function to return a sample of an infinite iterator. It
             should have the following prototype:</p>
             <pre><code class="python">
@@ -136,17 +136,28 @@ document.getElementsByTagName('head')[0].appendChild(link);
             We'll get onto the generators next &hellip;</p>
           </section>
           <section>
-            <h2>Task 1: count</h2>
-            <p>How did you do?</p>
+            <h2>Task 1: sample</h2>
             <pre><code class="python">
+            def sample(iterable, n):
+                l = []
+                for i in iterable:
+                    if not n:
+                        break
+                    n -= 1
+                    l.append(i)
+                return l
+
+            def sample(iterable, n):
+                return [i for i, j in zip(iterable, range(n)]
+
             def sample(iterable, n):
                 return [next(iterable) for i in range(n)]
             </code></pre>
           </section>
           <section>
             <h2>Task 2: squares</h2>
-            <p>Write a generator function to return the square numbers (1, 4, 9,
-            16, 25, &hellip;). It should have the prototype:</p>
+            <p>Write a generator function to return the square numbers (1, 4,
+            9, 16, 25, &hellip;). It should have the prototype:</p>
             <pre><code class="python">
             def squares():
                 # Your code goes here
@@ -155,7 +166,6 @@ document.getElementsByTagName('head')[0].appendChild(link);
           </section>
           <section>
             <h2>Task 2: squares</h2>
-            <p>How did you do?</p>
             <pre><code class="python">
             from itertools import count
 
@@ -176,25 +186,38 @@ document.getElementsByTagName('head')[0].appendChild(link);
           </section>
           <section>
             <h2>Task 4: fibonacci</h2>
-            <p>Write a generator function to return the fibonacci sequence (1, 1,
-            2, 3, 5, 8, 13, &hellip;). It should have the prototype:</p>
+            <p>Write a generator function to return the fibonacci sequence (1,
+            1, 2, 3, 5, 8, 13, &hellip;). It should have the prototype:</p>
             <pre><code class="python">
             def fib():
                 # Your code goes here
             </code></pre>
           </section>
           <section>
-            <h2>Task 5: sliding_window</h2>
+            <h2>Task 5: scaled</h2>
+            <p>Write a generator function which, given an <em>iterable</em>,
+            yields each element of <em>iterable</em> multiplied by <em>n</em>.
+            It should have the prototype:</p>
+            <pre><code class="python">
+            def scaled(iterable, n):
+                # Your code goes here
+            </code></pre>
+            <p>This function isn't terribly useful, but the concept is
+            important for the next task...</p>
+          </section>
+          <section>
+            <h2>Task 6: sliding_window</h2>
             <p>Write a generator function with the prototype:</p>
             <pre><code class="python">
             def sliding_window(iterable, n=2):
                 # Your code goes here
             </code></pre>
-            <p>This will return a sliding window <em>n</em> elements long over
-            <em>iterable</em>. For example, ABCDEF becomes ABC, BCD, CDE, DEF.
+            <p>This will yield a sliding window <em>n</em> elements long over
+            <em>iterable</em>. For example, ABCDEF yields ABC, then BCD, then
+            CDE, then DEF.</p>
           </section>
           <section>
-            <h2>Task 6: differences</h2>
+            <h2>Task 7: differences</h2>
             <p>Write a generator function which returns the differences
             between values of an <em>iterable</em>:</p>
             <pre><code class="python">
@@ -204,7 +227,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <p>Hint: You can use <code>sliding_window</code> for this</p>
           </section>
           <section>
-            <h2>Task 7: ratios</h2>
+            <h2>Task 8: ratios</h2>
             <p>Write a generator function which returns the ratio between
             values of an <em>iterable</em>:</p>
             <pre><code class="python">
@@ -224,6 +247,81 @@ document.getElementsByTagName('head')[0].appendChild(link);
             </code></pre>
             <p>Extra credit: can you write a function that determines whether
             a sequence converges and if so, on what value?</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Stock Market Analysis</h2>
+            <p>The major challenge of the evening: use your new found generator
+            skills to analyse (a rapid playback of the history of) the FTSE
+            market. You'll find this at:</p>
+            <p><a
+            href="http://mrkrabs.waveform.org.uk/presentations/generators/stocks/market.html">mrkrabs.waveform.org.uk/presentations/generators/stocks/market.html</a></p>
+          </section>
+          <section>
+            <h2>Task 1: market_scraper</h2>
+            <p>Build a generator function which, on each iteration, returns a
+            new state of the market as a dict mapping stock symbols to their
+            prices, changes, etc..</p>
+            <pre><code class="python">
+            def market_scraper(url="http://mrkrabs..."):
+                while True:
+                    # Some hints:
+                    # use requests.get to grab the page
+                    # use bs4.BeautifulSoup to extract data
+                    # yield the data (if it's changed)
+            </code></pre>
+          </section>
+          <section>
+            <h2>Task 2: portfolio_manager</h2>
+            <p>Build a generator function which, given an iterable of market
+            states (which you now have), yields buy and sell instructions.</p>
+            <p>Hints: use <code>sliding_window</code> to look at market states
+            over time, and split out the buy/sell algorithms into their own
+            generators.</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Cool Examples</h2>
+            <pre><code class="python">
+            import io
+            import picamera
+            from itertools import cycle
+
+            def streams():
+                # Infinitely cycle between two memory streams
+                for stream in cycle((io.BytesIO(), io.BytesIO())):
+                    stream.seek(0)
+                    stream.truncate()
+                    yield stream
+                    # Do something with the stream here...
+
+            with picamera.PiCamera() as camera:
+                camera.capture_sequence(streams())
+            </code></pre>
+          </section>
+          <section>
+            <h2>Cool Examples</h2>
+            <pre><code class="python">
+            from picraft import Vector, Block
+
+            def track_changes(frames, default=Block('air')):
+                # yield dicts containing only those
+                # vectors with changed blocks
+                old_frame = None
+                for frame in frames:
+                    if old_frame is None:
+                        old_frame = {v: default for v in frame}
+                    changes = {
+                        v: b for v, b in frame.items()
+                        if old_frame.get(v) != b}
+                    changes.update({
+                        v: default for v in old_frame
+                        if v not in frame})
+                    yield changes
+                    old_frame = frame
+            </code></pre>
           </section>
         </section>
         <section>
@@ -250,6 +348,31 @@ document.getElementsByTagName('head')[0].appendChild(link);
     </div>
     <script src="../reveal.js/lib/js/head.min.js"></script>
     <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+var forEach = function (array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope, i, array[i]);
+    }
+};
+
+// Strip the indentation from the pre-code sections
+forEach(document.querySelectorAll('pre code'), function(i, el) {
+    var lines = el.textContent.split('\n');
+    if (lines[0] === '') lines.shift();
+    var matches;
+    var indentation =
+        (matches = /^[\s\t]+/.exec(lines[0])) !== null ?
+            matches[0] :
+            null;
+    if (!!indentation) {
+        lines = lines.map(function (line) {
+            return line.replace(indentation, '').replace(/\t/g, '    ');
+        });
+
+        el.textContent = lines.join('\n').trim();
+    }
+});
+    </script>
     <script>
 Reveal.initialize({
     // The "normal" size of the presentation, scaled here for the notebook
