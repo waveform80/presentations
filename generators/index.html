@@ -129,7 +129,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <p>Write a function to return a sample of an infinite iterator. It
             should have the following prototype:</p>
             <pre><code class="python">
-            def sample(iterable, n):
+            def sample(iterable, n=10):
                 # Your code goes here
             </code></pre>
             <p>Remember: this isn't a generator function, just a regular one.
@@ -138,7 +138,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <section>
             <h2>Task 1: sample</h2>
             <pre><code class="python">
-            def sample(iterable, n):
+            def sample(iterable, n=10):
                 l = []
                 for i in iterable:
                     if not n:
@@ -147,10 +147,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
                     l.append(i)
                 return l
 
-            def sample(iterable, n):
+            def sample(iterable, n=10):
                 return [i for i, j in zip(iterable, range(n)]
 
-            def sample(iterable, n):
+            def sample(iterable, n=10):
                 return [next(iterable) for i in range(n)]
             </code></pre>
           </section>
