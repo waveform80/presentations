@@ -323,6 +323,27 @@ document.getElementsByTagName('head')[0].appendChild(link);
                     old_frame = frame
             </code></pre>
           </section>
+          <section>
+            <h2>Cool Examples</h2>
+            <pre><code class="python">
+            import io
+            import sqlite3
+            from lars import apache, sql
+
+            connection = sqlite3.connect(
+                'apache.db',
+                detect_types=sqlite3.PARSE_DECLTYPES)
+
+            with io.open('/var/log/apache2/access.log', 'rb') as infile:
+                with io.open('apache.csv', 'wb') as outfile:
+                    with apache.ApacheSource(infile) as source:
+                        with sql.SQLTarget(
+                                sqlite3, connection, 'log_entries',
+                                create_table=True) as target:
+                            for row in source:
+                                target.write(row)
+            </code></pre>
+          </section>
         </section>
         <section>
           <section>
