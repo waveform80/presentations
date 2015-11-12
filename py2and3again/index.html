@@ -1,0 +1,341 @@
+<html lang="en">
+  <head>
+    <meta chatset="utf-8">
+    <title>Python 2 and 3 revisited</title>
+    <meta name="description" content="Python 3, why, when, how and where?" />
+    <meta name="author" content="Dave Jones">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/solarized.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+    <script>
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../reveal.js/' + (window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css');
+document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <style type="text/css">
+.reveal section img.inline {
+  display: inline;
+  border: 0 none;
+  box-shadow: none;
+  max-height: 1em;
+  vertical-align: middle;
+}
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Making friends with Python 3</h1>
+          <h2>Why and how?</h2>
+        </section>
+        <section>
+          <h2>Vital Statistics</h2>
+          <dl>
+            <dt>Name</dt><dd>Dave Jones</dd>
+            <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+            <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+          </dl>
+        </section>
+        <section>
+          <h1>Why?</h1>
+          <aside class="notes">
+            <p>Does anyone want persuading of the need to migrate to Python 3?
+            If not, we can skip this section!</p>
+          </aside>
+        </section>
+        <section>
+          <h1>It's the future!</h1>
+          <aside class="notes">
+            <ul>
+              <li>New features only appear in Python 3 (asyncio, enum,
+              statistics, ipaddress, matrix mult operator, enhanced tuple
+              unpacking, etc.)</li>
+              <li>This applies to several popular libraries too, not just the
+              core language</li>
+              <li>Schools already teaching this exclusively so new recruits
+              won't know 2 in a few years</li>
+              <li>3 is now faster than Python 2 (marginally, this isn't really
+              a good enough reason)</li>
+          </aside>
+        </section>
+        <section>
+          <h1>Legacy support will end</h1>
+          <h2>(eventually)</h2>
+          <aside class="notes">
+            <p>Not any time soon though; from the Python 2.7 release notes
+            <q>Python 2.7 is currently expected to remain supported by the core
+              development team &hellip; until at least 2020</q>. So, you've
+            got a while (
+        </section>
+        <section>
+          <h1>How?</h1>
+          <h2>If you're on &lt;2.7</h2>
+          <aside class="notes">
+            <p>If you need to support Python 2.6 or below, forget it. Or more
+            precisely, if you're on Scientific Linux 6, you need to persude
+            your site admins to move to Scientific Linux 7 (and Python 2.7) now
+            (2.6 was retired in 2013 - you've had no fixes from the core team
+            for 2 years!)</p>
+            <p>2.7 adds set literals, dict and set comprehensions, multiple
+            context managers, the <tt>io</tt> library, the <tt>OrderedDict</tt>
+            type, the <tt>argparse</tt> module, the <tt>memoryview</tt> object
+            (albeit incomplete), auto-numbering in <tt>.format</tt> and some
+            other less important stuff.</p>
+            <p>All of the above are used in Python 3 (set literals, set and
+            dict comprehensions, and the io library in particular!)</p>
+          </aside>
+        </section>
+        <section>
+          <h1>How?</h1>
+          <h2>If you're on &gt;=2.7</h2>
+          <aside class="notes">
+            <p>You can (probably) write idiomatic Python 3 right away without
+            massive effort if you follow a few hints from this presentation
+            (note: I'm not saying you need to run Python 3 yet, just that you
+            need to write it!)
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">from __future__ import (
+    unicode_literals,
+    absolute_import,
+    print_function,
+    division,
+    )
+          </code></pre>
+          <aside class="notes">
+            <p>Start with a full compliment of __future__ imports (just
+            copy'n'paste these or learn 'em off by heart - I can pretty much
+            type these off the top of my head these days).
+
+            <p>What do they each mean?
+
+            <ul>
+              <li>unicode_literals - Strings are the same as in Python 3.
+              They're all unicode objects now. If you want a byte string of
+              some sort either declare a <code>b''</code> literal or "encode" a
+              unicode string
+              <li>absolute_import - This one's down to one of the biggest
+              mistakes in Python (which wasn't corrected in Python 3): the
+              standard library has no name (and wasn't given one in Python 3
+              because that was considered too big a change).
+              <li>print_function - print() is the same as in Python 3. Just
+              don't use obscure stuff like <code>flush</code>
+              <li>division - <code>//</code> and <code>/</code> are the same as
+              in Python 3 (<em>floor</em> and true division respectively)
+            </ul>
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">from __future__ import (
+    unicode_literals,
+    absolute_import,
+    print_function,
+    division,
+    )
+str = type('')</code></pre>
+          <aside class="notes">
+            <p>Horrid hack of my own devising. Makes all string types
+            equivalent to Python 3; forget <code>unicode</code>, that's
+            <code>str</code> now, and <code>str</code> is <code>bytes</code>
+            (which is in Py 2.7). So now you can do stuff like
+            <code>isinstance(foo, str)</code> and it'll mean the same in both.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">from __future__ import (
+    unicode_literals,
+    absolute_import,
+    print_function,
+    division,
+    )
+nstr = str
+str = type('')</code></pre>
+          <aside class="notes">
+            <p>Necessary on rare occasions when you're dealing with horrid
+            stuff like struct which demands a byte-string on Python 2, but
+            a unicode-string on Python 3 (and absolutely won't accept anything
+            else on either platform).
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">import io</code></pre>
+          <aside class="notes">
+            <p>In Python 3, <code>io.open</code> is just an alias for
+            <code>open</code> but in Python 2 it's got a whole load of
+            machinery for making it compatible with Python 3. In particular,
+            check out the <code>encoding</code> parameter. While you're at it,
+            start using <code>io.BytesIO</code> instead of
+            <code>StringIO.StringIO</code>.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">try:
+    from itertools import izip as zip
+except ImportError:
+    pass</code></pre>
+          <aside class="notes">
+            <p>If you're dealing with <em>huge</em> zips you might want this
+            but generally don't bother with it. Similar argument for
+            dict.iteritems and so on; just use dict.items. Only complicate
+            stuff if your code starts killing systems.
+        </section>
+        <section>
+          <pre><code class="python">try:
+    range = xrange
+except NameError:
+    pass</code></pre>
+          <aside class="notes">
+            <p>If you <em>really</em> need huge ranges you can bung this at the
+            top of your unit but be warned: mostly it's a waste of time and
+            secondly, it still sucks compared to Python 3's range (no slicing,
+            no start/stop/step attributes, O(n) lookup time, etc). If you
+            absolutely need Python 3's range, see picraft.compat.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">try:
+    from functools import reduce
+except ImportError:
+    pass</code></pre>
+          <aside class="notes">
+            <p>If you need reduce, you need to import it</p>
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">try:
+    from SocketServer import TCPServer, ForkingMixIn
+except ImportError:
+    from socketserver import TCPServer, ForkingMixIn</code></pre>
+          <pre><code class="python">try:
+    import SocketServer as socketserver
+except ImportError:
+    import socketserver</code></pre>
+          <aside class="notes">
+            <p>If you need to import stuff that'll obviously be changed in
+            Python 3 (CamelCase libraries like SocketServer), make it a
+            conditional import. Yeah, it's ugly, sorry.</p>
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">a, *b, c = [1, 2, 3, 4, 5]</code></pre>
+          <pre><code class="python">def f(a, *, foo=2, bar=3):
+    pass</code></pre>
+          <aside class="notes">
+            <p>It should go without saying, but if you want to use Python 3
+            specific constructs like the above: tough. You don't get to play
+            with the new toys until you migrate fully.</p>
+          </aside>
+        </section>
+          <!-- No Py3 specific stuff: proper coroutines, create-if-not-exist,
+               ip-address/network types, infix matrix mult, statistics module,
+          enumerations, math.isclose, asyncio, type hints, expanded memoryview,
+          -->
+        <section>
+        </section>
+        <section>
+          <h2>Vital Statistics</h2>
+          <dl>
+            <dt>Name</dt><dd>Dave Jones</dd>
+            <dt>Occupation</dt><dd>Python Wrangler</dd>
+            <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+            <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+          </dl>
+        </section>
+        <section>
+          <h1>Thank You</h1>
+          <h2>Questions?</h2>
+        </section>
+      </div>
+    </div>
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+Reveal.initialize({
+    // The "normal" size of the presentation, scaled here for the notebook
+    width: 800,
+    height: 600,
+
+    // Factor of display size that should remain empty around the content
+    margin: 0.1,
+
+    // Bounds for smallest/largest possible scale to apply to content
+    minScale: 0.2,
+    maxScale: 1.5,
+
+    controls: true,     // Display controls in the bottom right corner
+    progress: true,     // Display a presentation progress bar
+    slideNumber: false, // Display the page number of the current slide
+    history: true,      // Push each slide change to the browser history
+    keyboard: true,     // Enable keyboard shortcuts for navigation
+    overview: true,     // Enable the slide overview mode
+    center: true,       // Vertical centering of slides
+    touch: true,        // Enables touch navigation on devices with touch input
+    loop: false,        // Loop the presentation
+    rtl: false,         // Change the presentation direction to be RTL
+    fragments: true,    // Turns fragments on and off globally
+
+    // Flags if the presentation is running in an embedded mode,
+    // i.e. contained within a limited portion of the screen
+    embedded: false,
+
+    // Flags if we should show a help overlay when the questionmark
+    // key is pressed
+    help: true,
+
+    // Number of milliseconds between automatically proceeding to the
+    // next slide, disabled when set to 0, this value can be overwritten
+    // by using a data-autoslide attribute on your slides
+    autoSlide: 0,
+    // Stop auto-sliding after user input
+    autoSlideStoppable: true,
+
+    mouseWheel: false,               // Enable slide navigation via mouse wheel
+    hideAddressBar: true,            // Hides the address bar on mobile devices
+    previewLinks: false,             // Opens links in an iframe preview overlay
+    transition: 'slide',             // Transition style (none/fade/slide/convex/concave/zoom)
+    transitionSpeed: 'default',      // Transition speed (default/fast/slow)
+    backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
+    viewDistance: 3,                 // Number of slides away from the current that are visible
+
+    // Parallax background image
+    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+    // Parallax background size
+    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+    // Amount to move parallax background (horizontal and vertical) on slide change
+    // Number, e.g. 100
+    parallaxBackgroundHorizontal: '',
+    parallaxBackgroundVertical: '',
+
+    // Optional dependencies
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+        // Syntax highlight for <code> elements
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+        // Speaker notes
+        { src: '../reveal.js/plugin/notes/notes.js', async: true },
+
+        // Remote control your reveal.js presentation using a touch device
+        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
+
+        // MathJax
+        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+    ]
+    });
+    </script>
+  </body>
+</html>
