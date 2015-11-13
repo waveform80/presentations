@@ -45,6 +45,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h2>Making friends with Python 3</h2>
         </section>
         <section>
+          <a href="http://www.waveform.org.uk/presentations/py3friends/">www.waveform.org.uk/presentations/py3friends/</a>
+        </section>
+        <section>
           <h2>Vital Statistics</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
@@ -56,7 +59,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h1>Why?</h1>
           <aside class="notes">
             <p>Does anyone want persuading of the need to migrate to Python 3?
-            If not, we can skip this section!</p>
+            If not, we can skip this section!
           </aside>
         </section>
         <section data-transition="fade-in zoom-out">
@@ -68,13 +71,13 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <ul>
               <li>New features only appear in Python 3 (asyncio, enum,
               statistics, ipaddress, matrix mult operator, enhanced tuple
-              unpacking, etc.)</li>
+              unpacking, etc.)
               <li>This applies to several popular libraries too, not just the
-              core language</li>
+              core language
               <li>Schools already teaching this exclusively so new recruits
-              won't know 2 in a few years</li>
+              won't know 2 in a few years
               <li>3 is now faster than Python 2 (marginally, this isn't really
-              a good enough reason)</li>
+              a good enough reason)
             </ul>
           </aside>
         </section>
@@ -94,7 +97,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <p>So, you've got a while! In other words, no-one ever expected a
             fast, big-bang migration. The plan has always been a slow drift
             over to 3, but it is true that as the majority of libraries are now
-            ported, the pace has picked up a bit.</p>
+            ported, the pace has picked up a bit.
           </aside>
         </section>
         <section>
@@ -114,14 +117,16 @@ document.getElementsByTagName('head')[0].appendChild(link);
             your site admins to move to Scientific Linux 7 (and Python 2.7) now
             (2.6 was retired in 2013 - you've had no fixes from the core team
             for 2 years, although your distro vendors have hopefully been
-            back-porting them!)</p>
+            back-porting them!)
+
             <p>2.7 adds set literals, dict and set comprehensions, multiple
-            context managers, the <tt>io</tt> library, the <tt>OrderedDict</tt>
-            type, the <tt>argparse</tt> module, the <tt>memoryview</tt> object
-            (albeit incomplete), auto-numbering in <tt>.format</tt> and some
-            other less important stuff. All of the above are used in Python 3
-            (set literals, set and dict comprehensions, and the io library in
-            particular!)</p>
+            context managers, the <code>io</code> library, the
+            <code>OrderedDict</code> type, the <code>argparse</code> module,
+            the <code>memoryview</code> object (albeit incomplete),
+            auto-numbering in <code>.format</code> and some other less
+            important stuff. All of the above are used in Python 3 (set
+            literals, set and dict comprehensions, and the io library in
+            particular!)
           </aside>
         </section>
         <section data-transition="fade-in zoom-out">
@@ -133,7 +138,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <p>You can (probably) write (mostly) idiomatic Python 3 right away
             without massive effort if you follow a few hints from this
             presentation (note: I'm not saying you need to run Python 3 yet,
-            just that you need to write it!)</p>
+            just that you need to write it!)
           </aside>
         </section>
         <section>
@@ -155,15 +160,17 @@ document.getElementsByTagName('head')[0].appendChild(link);
               <li>unicode_literals - Strings are the same as in Python 3.
               They're all unicode objects now. If you want a byte string of
               some sort either declare a <code>b''</code> literal or "encode" a
-              unicode string
-              <li>absolute_import - This one's down to one of the biggest
-              mistakes in Python (which wasn't corrected in Python 3): the
-              standard library has no name (and wasn't given one in Python 3
-              because that was considered too big a change).
+              unicode string. Likewise, to get a unicode string from bytes,
+              just "decode" it.
               <li>print_function - print() is the same as in Python 3. Just
               don't use obscure stuff like <code>flush</code>
               <li>division - <code>//</code> and <code>/</code> are the same as
               in Python 3 (<em>floor</em> and true division respectively)
+              <li>absolute_import - All imports start from entries in
+              <code>sys.path</code>.Unless you're writing a package (you have
+              a <code>__init__.py</code> file) you probably don't need to worry
+              about this; if you do, read up on it (I haven't got the time to
+              explain it now)
             </ul>
           </aside>
         </section>
@@ -181,6 +188,7 @@ str = type('')</code></pre>
             <code>str</code> now, and <code>str</code> is <code>bytes</code>
             (which is in Py 2.7). So now you can do stuff like
             <code>isinstance(foo, str)</code> and it'll mean the same in both.
+            I use this often enough that it forms part of my "default" header.
           </aside>
         </section>
         <section>
@@ -193,10 +201,10 @@ str = type('')</code></pre>
 nstr = str
 str = type('')</code></pre>
           <aside class="notes">
-            <p>Necessary on rare occasions when you're dealing with horrid
-            stuff like struct which demands a byte-string on Python 2, but
-            a unicode-string on Python 3 (and absolutely won't accept anything
-            else on either platform).
+            <p>Now we're into the stuff you only add as necessary.  On rare
+            occasions when you're dealing with horrid stuff like struct which
+            demands a byte-string on Python 2, but a unicode-string on Python 3
+            (and absolutely won't accept anything else on either platform).
           </aside>
         </section>
         <section>
@@ -217,9 +225,8 @@ except ImportError:
     pass</code></pre>
           <aside class="notes">
             <p>If you're dealing with <em>huge</em> zips you might want this
-            but generally don't bother with it. Similar argument for
-            dict.iteritems and so on; just use dict.items. Only complicate
-            stuff if your code starts killing systems.
+            but generally don't bother with it. Only complicate stuff if your
+            code starts killing systems.
         </section>
         <section>
           <pre><code class="python">try:
@@ -243,7 +250,7 @@ except ImportError:
             <p>If you need reduce, you need to import it</p>
           </aside>
         </section>
-        <section>
+        <section data-transition="fade-in zoom-out">
           <pre><code class="python">try:
     from SocketServer import TCPServer, ForkingMixIn
 except ImportError:
@@ -258,18 +265,100 @@ except ImportError:
             conditional import. Yeah, it's ugly, sorry.</p>
           </aside>
         </section>
+        <section data-transition="zoom-in fade-out">
+          <img class="slide" src="whoa.jpg" />
+        </section>
         <section>
+          <pre><code class="python">from __future__ import (
+    unicode_literals,
+    absolute_import,
+    print_function,
+    division,
+    )
+nstr = str
+str = type('')
+try:
+    from itertools import izip as zip
+except ImportError:
+    pass
+try:
+    from SocketServer import TCPServer, ForkingMixIn
+except ImportError:
+    from socketserver import TCPServer, ForkingMixIn
+try:
+    from functools import reduce
+except ImportError:
+    pass
+try:
+    range = xrange
+except NameError:
+    pass</code></pre>
+          <aside class="notes">
+            <p>Am I saying you need a header like this on your code?!
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">from __future__ import (
+    unicode_literals,
+    absolute_import,
+    print_function,
+    division,
+    )
+nstr = str
+str = type('')
+try:
+    from itertools import izip as zip
+    from SocketServer import TCPServer, ForkingMixIn
+    range = xrange
+except ImportError:
+    from socketserver import TCPServer, ForkingMixIn
+    from functools import reduce</code></pre>
+          <aside class="notes">
+            <p>No. Be smart: there's usually a Py 2 and a Py 3 branch of any
+            such <code>try</code> statements, so consolidate stuff. Also, other
+            than the <code>__future__</code> imports, don't include stuff
+            you're not using in the module. The key is that all compatibility
+            stuff should aim for idiomatic Python 3, and should be consolidated
+            at the top of the unit for future removal.
+          </aside>
+        </section>
+        <section data-background="#dd0000" data-background-transition="zoom" data-transition="zoom-in fade-out">
+          <img class="slide" data-src="no.png" />
+          <aside class="notes">
+            <p>What about stuff you shouldn't be using?
+          </aside>
+        </section>
+        <section data-background="#dd0000">
+          <pre><code class="python">open('myfile.txt', 'rb')</code></pre>
+          <pre><code class="python">stream = StringIO.StringIO()</code></pre>
+          <pre><code class="python">d = {1: 'a'}
+d.iteritems()</code></pre>
+          <pre><code class="python"></code></pre>
+          <aside class="notes">
+            <p>Just use <code>items</code>, <code>keys</code>, etc. For dicts
+            less than a thousand items you won't notice a performance difference
+            and it'll make converting your code trivial. If you <em>really</em>
+            need <code>iteritems</code>, you'll need to endure some pain.
+          </aside>
+        </section>
+        <section data-transition="fade-in zoom-out" data-background="#dd0000">
           <pre><code class="python">a, *b, c = [1, 2, 3, 4, 5]</code></pre>
           <pre><code class="python">def f(a, *, foo=2, bar=3):
     pass</code></pre>
+          <pre><code class="python">io.open('myfile.txt', 'x')</code></pre>
           <pre><code class="python">from math import isclose
 import statistics
 
 a = b @ x</code></pre>
           <aside class="notes">
             <p>It should go without saying, but if you want to use Python 3
-            specific constructs like the above: tough. You don't get to play
-            with the new toys until you migrate fully.</p>
+            specific constructs like the above: tough.
+          </aside>
+        </section>
+        <section data-transition="zoom-in fade-out">
+          <img class="slide" data-src="look-dont-touch.svg" />
+          <aside class="notes">
+            <p>You don't get to play with the shiny toys until you migrate.
           </aside>
         </section>
           <!-- No Py3 specific stuff: proper coroutines, create-if-not-exist,
@@ -280,7 +369,7 @@ a = b @ x</code></pre>
           <h2>Vital Statistics</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
-            <dt>Occupation</dt><dd>Python Wrangler</dd>
+            <dt>Occupation</dt><dd>Perpetual Upgrader</dd>
             <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
             <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
           </dl>
