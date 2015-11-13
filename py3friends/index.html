@@ -43,10 +43,18 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <img class="slide" width="200" data-src="python-logo.svg" />
           <h2>Making friends with Python 3</h2>
+          <aside class="notes">
+            <p>Welcome to the Software Carpentry instructors retreat, and this
+            talk: making friends with Python 3
+          </aside>
         </section>
         <section>
           <h2>Available now on the interwebs!</h2>
           <a href="http://www.waveform.org.uk/presentations/py3friends/">www.waveform.org.uk/presentations/py3friends/</a>
+          <aside class="notes">
+            <p>Broadcast viewers might have trouble viewing the slides. If so,
+            visit this URL and you can follow along
+          </aside>
         </section>
         <section>
           <h2>Vitalstatistix</h2>
@@ -55,6 +63,11 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
             <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
           </dl>
+          <aside class="notes">
+            <p>Local Python and SQL freelance dev. Feel free to contact me
+            offline to discuss migration issues, or take a look at my libraries
+            in my GitHub repo for examples.
+          </aside>
         </section>
         <section>
           <h1>Why?</h1>
@@ -104,7 +117,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h1>How?</h1>
           <aside class="notes">
-
+            <p>Okay, how should we go about migrating to Python 3? The cleanest
+            solution I've found so far is to write idiomatic Python 3 while
+            running the Python 2 interpreter.
           </aside>
         </section>
         <section data-transition="fade-in zoom-out">
@@ -148,31 +163,78 @@ document.getElementsByTagName('head')[0].appendChild(link);
     absolute_import,
     print_function,
     division,
-    )
-          </code></pre>
+    )</code></pre>
           <aside class="notes">
             <p>Start with a full compliment of __future__ imports (just
             copy'n'paste these or learn 'em off by heart - I can pretty much
             type these off the top of my head these days).
 
-            <p>What do they each mean?
-
-            <ul>
-              <li>unicode_literals - Strings are the same as in Python 3.
-              They're all unicode objects now. If you want a byte string of
-              some sort either declare a <code>b''</code> literal or "encode" a
-              unicode string. Likewise, to get a unicode string from bytes,
-              just "decode" it.
-              <li>print_function - print() is the same as in Python 3. Just
-              don't use obscure stuff like <code>flush</code>
-              <li>division - <code>//</code> and <code>/</code> are the same as
-              in Python 3 (<em>floor</em> and true division respectively)
-              <li>absolute_import - All imports start from entries in
-              <code>sys.path</code>.Unless you're writing a package (you have
-              a <code>__init__.py</code> file) you probably don't need to worry
-              about this; if you do, read up on it (I haven't got the time to
-              explain it now)
-            </ul>
+            <p>What do they each mean? Let's go through them &hellip;
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">&gt;&gt;&gt; from __future__ import unicode_literals
+&gt;&gt;&gt; type('')
+&lt;type 'unicode'&gt;
+&gt;&gt;&gt; type(b'')
+&lt;type 'str'&gt;</code></pre>
+          <pre><code class="python">&gt;&gt;&gt; from __future__ import unicode_literals
+&gt;&gt;&gt; type('')
+&lt;type 'str'&gt;
+&gt;&gt;&gt; type(b'')
+&lt;type 'bytes'&gt;</code></pre>
+          <aside class="notes">
+            <p>unicode_literals - Strings are the same as in Python 3.  They're
+            all unicode objects now. If you want a byte string of some sort
+            either declare a <code>b''</code> literal or "encode" a unicode
+            string. Likewise, to get a unicode string from bytes, just "decode"
+            it.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">&gt;&gt;&gt; from __future__ import absolute_import
+&gt;&gt;&gt; import foo # "foo.py" *must* be in sys.path
+&gt;&gt;&gt; import .foo # import "foo.py" from this module's dir
+&gt;&gt;&gt; import ..foo # import "foo.py" from parent module's dir</code></pre>
+          <aside class="notes">
+            <p>absolute_import - All imports start from entries in
+            <code>sys.path</code>.Unless you're writing a package (you have
+            a <code>__init__.py</code> file) you probably don't need to worry
+            about this; if you do, read up on it (I haven't got the time to
+            explain it now)
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">&gt;&gt;&gt; from __future__ import print_function
+&gt;&gt;&gt; print "Hello world!"
+  File "&lt;stdin&gt;", line 1
+      print "Hello world!"
+                         ^
+SyntaxError: Missing parentheses in call to 'print'
+&gt;&gt;&gt; print("Hello world!")
+Hello world!</code></pre>
+          <aside class="notes">
+            <p>print_function - <code>print()</code> is the same as in Python
+            3. Just don't use obscure stuff like <code>flush</code>. Oh, and
+            this means you can use print in lambdas (if you want).
+          </aside>
+        </section>
+        <section>
+          <pre><code class="python">&gt;&gt;&gt; 1/2
+0
+&gt;&gt;&gt; 1/2
+-1
+&gt;&gt;&gt; from __future__ import division
+&gt;&gt;&gt; 1/2
+0.5
+&gt;&gt;&gt; -1/2
+-0.5
+&gt;&gt;&gt; 1//2
+0
+&gt;&gt;&gt; -1//2</code></pre>
+          <aside class="notes">
+            <p>division - <code>//</code> and <code>/</code> are the same as
+            in Python 3 (<em>floor</em> and true division respectively).
           </aside>
         </section>
         <section>
@@ -183,6 +245,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
     division,
     )
 str = type('')</code></pre>
+          <pre><code class="python">&gt;&gt;&gt; isinstance('foo', str)
+True
+&gt;&gt;&gt; isinstance(b'foo', str)
+False</code></pre>
           <aside class="notes">
             <p>Horrid hack of my own devising. Makes all string types
             equivalent to Python 3; forget <code>unicode</code>, that's
@@ -201,6 +267,9 @@ str = type('')</code></pre>
     )
 nstr = str
 str = type('')</code></pre>
+          <pre><code class="python">&gt;&gt;&gt; import struct
+&gt;&gt;&gt; struct.pack(nstr('&gt;bbl'), 0, 0, -1)
+'\x00\x00\xff\xff\xff\xff'</code></pre>
           <aside class="notes">
             <p>Now we're into the stuff you only add as necessary.  On rare
             occasions when you're dealing with horrid stuff like struct which
@@ -210,6 +279,14 @@ str = type('')</code></pre>
         </section>
         <section>
           <pre><code class="python">import io</code></pre>
+          <pre><code class="python">text_file = io.open('foo.txt', 'w', encoding='utf-8')
+text_file.write('Some text (note, this is unicode!)')
+
+bin_file = io.open('bar.dat', 'rb')
+bin_file.write(b'Some data including binary\x00')
+
+stream = io.BytesIO()
+stream.write(b'\xff\xff')</code></pre>
           <aside class="notes">
             <p>In Python 3, <code>io.open</code> is just an alias for
             <code>open</code> but in Python 2 it's got a whole load of
@@ -224,6 +301,7 @@ str = type('')</code></pre>
     from itertools import izip as zip
 except ImportError:
     pass</code></pre>
+          <p>For <em>big</em> zips</p>
           <aside class="notes">
             <p>If you're dealing with <em>huge</em> zips you might want this
             but generally don't bother with it. Only complicate stuff if your
@@ -234,6 +312,7 @@ except ImportError:
     range = xrange
 except NameError:
     pass</code></pre>
+          <p>For <em>big</em> ranges</p>
           <aside class="notes">
             <p>If you <em>really</em> need huge ranges you can bung this at the
             top of your unit but be warned: mostly it's a waste of time and
@@ -243,12 +322,10 @@ except NameError:
           </aside>
         </section>
         <section>
-          <pre><code class="python">try:
-    from functools import reduce
-except ImportError:
-    pass</code></pre>
+          <pre><code class="python">from functools import reduce</code></pre>
           <aside class="notes">
-            <p>If you need reduce, you need to import it</p>
+            <p>If you need reduce, you need to import it. Python 2.7 includes
+            this in functools for compatibility</p>
           </aside>
         </section>
         <section data-transition="fade-in zoom-out">
@@ -286,10 +363,7 @@ try:
     from SocketServer import TCPServer, ForkingMixIn
 except ImportError:
     from socketserver import TCPServer, ForkingMixIn
-try:
-    from functools import reduce
-except ImportError:
-    pass
+from functools import reduce
 try:
     range = xrange
 except NameError:
@@ -307,13 +381,13 @@ except NameError:
     )
 nstr = str
 str = type('')
-try:
+try: # Py 2
     from itertools import izip as zip
     from SocketServer import TCPServer, ForkingMixIn
     range = xrange
-except ImportError:
+except ImportError: # Py 3
     from socketserver import TCPServer, ForkingMixIn
-    from functools import reduce</code></pre>
+from functools import reduce</code></pre>
           <aside class="notes">
             <p>No. Be smart: there's usually a Py 2 and a Py 3 branch of any
             such <code>try</code> statements, so consolidate stuff. Also, other
@@ -462,6 +536,12 @@ Reveal.initialize({
     parallaxBackgroundHorizontal: '',
     parallaxBackgroundVertical: '',
 
+    multiplex: {
+      secret: null, // null so the clients do not have control of the master
+      id: '05c51a7139a2021f',
+      url: 'mrkrabs.waveform.org.uk:1948'
+    },
+
     // Optional dependencies
     dependencies: [
         // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
@@ -470,14 +550,9 @@ Reveal.initialize({
         // Syntax highlight for <code> elements
         { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 
-        // Speaker notes
-        { src: '../reveal.js/plugin/notes/notes.js', async: true },
-
-        // Remote control your reveal.js presentation using a touch device
-        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
-
-        // MathJax
-        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+        // Multiplex dependencies
+        { src: '//cdn.socket.io/socket.io-1.3.5.js', async: true},
+        { src: '../reveal.js/plugin/multiplex/client.js', async: true},
     ]
     });
     </script>
