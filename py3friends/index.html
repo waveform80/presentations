@@ -45,10 +45,11 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h2>Making friends with Python 3</h2>
         </section>
         <section>
+          <h2>Available now on the interwebs!</h2>
           <a href="http://www.waveform.org.uk/presentations/py3friends/">www.waveform.org.uk/presentations/py3friends/</a>
         </section>
         <section>
-          <h2>Vital Statistics</h2>
+          <h2>Vitalstatistix</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
             <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
@@ -322,26 +323,48 @@ except ImportError:
             at the top of the unit for future removal.
           </aside>
         </section>
-        <section data-background="#dd0000" data-background-transition="zoom" data-transition="zoom-in fade-out">
+        <section data-background="#b5533c" data-background-transition="zoom" data-transition="zoom-in fade-out">
           <img class="slide" data-src="no.png" />
           <aside class="notes">
             <p>What about stuff you shouldn't be using?
           </aside>
         </section>
-        <section data-background="#dd0000">
+        <section data-background="#b5533c">
           <pre><code class="python">open('myfile.txt', 'rb')</code></pre>
           <pre><code class="python">stream = StringIO.StringIO()</code></pre>
           <pre><code class="python">d = {1: 'a'}
 d.iteritems()</code></pre>
-          <pre><code class="python"></code></pre>
+        </section>
+        <section data-background="#b5533c">
+          <pre><code class="python">io.open('myfile.txt', 'rb')</code></pre>
+          <pre><code class="python">stream = io.BytesIO()</code></pre>
+          <pre><code class="python">d = {1: 'a'}
+d.items()</code></pre>
           <aside class="notes">
+            <p>Remember: don't use <code>open</code> and <code>StringIO</code>,
+            use <code>io.open</code> and <code>io.BytesIO</code>
             <p>Just use <code>items</code>, <code>keys</code>, etc. For dicts
             less than a thousand items you won't notice a performance difference
             and it'll make converting your code trivial. If you <em>really</em>
             need <code>iteritems</code>, you'll need to endure some pain.
           </aside>
         </section>
-        <section data-transition="fade-in zoom-out" data-background="#dd0000">
+        <section data-background="#b5533c">
+          <pre><code class="python">class MyClass:
+    def __init__(self, foo):
+        super().__init__()</code></pre>
+        </section>
+        <section data-background="#b5533c">
+          <pre><code class="python">class MyClass(object):
+    def __init__(self, foo):
+        super(MyClass, self).__init__()</code></pre>
+          <aside class="notes">
+            <p>If you're using classes, always declare the parent class, and
+            when using super, always use the long form <code>super(class,
+            instance)</code>
+          </aside>
+        </section>
+        <section data-background="#b5533c" data-transition="fade-in zoom-out">
           <pre><code class="python">a, *b, c = [1, 2, 3, 4, 5]</code></pre>
           <pre><code class="python">def f(a, *, foo=2, bar=3):
     pass</code></pre>
@@ -366,7 +389,7 @@ a = b @ x</code></pre>
           enumerations, math.isclose, asyncio, type hints, expanded memoryview,
           -->
         <section>
-          <h2>Vital Statistics</h2>
+          <h2>Vitalstatistix</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
             <dt>Occupation</dt><dd>Perpetual Upgrader</dd>
