@@ -122,6 +122,15 @@ document.getElementsByTagName('head')[0].appendChild(link);
             running the Python 2 interpreter.
           </aside>
         </section>
+        <section>
+          <h2>Why not 2to3?</h2>
+          <aside class="notes">
+            <p>Why not start with the output of <code>2to3</code>? It doesn't
+            output Python 2 compatible code so either it means you need to
+            migrate <em>now</em> or effectively maintain two code-bases. Also,
+            you don't become familiar with the language differences.
+          </aside>
+        </section>
         <section data-transition="fade-in zoom-out">
           <h2>If you're on &lt;2.7</h2>
         </section>
@@ -231,7 +240,8 @@ Hello world!</code></pre>
 -0.5
 &gt;&gt;&gt; 1//2
 0
-&gt;&gt;&gt; -1//2</code></pre>
+&gt;&gt;&gt; -1//2
+-1</code></pre>
           <aside class="notes">
             <p>division - <code>//</code> and <code>/</code> are the same as
             in Python 3 (<em>floor</em> and true division respectively).
@@ -248,14 +258,18 @@ str = type('')</code></pre>
           <pre><code class="python">&gt;&gt;&gt; isinstance('foo', str)
 True
 &gt;&gt;&gt; isinstance(b'foo', str)
-False</code></pre>
+False
+&gt;&gt;&gt; isinstance('foo', bytes)
+False
+&gt;&gt;&gt; isinstance(b'foo', bytes)
+True</code></pre>
           <aside class="notes">
             <p>Horrid hack of my own devising. Makes all string types
             equivalent to Python 3; forget <code>unicode</code>, that's
             <code>str</code> now, and <code>str</code> is <code>bytes</code>
             (which is in Py 2.7). So now you can do stuff like
             <code>isinstance(foo, str)</code> and it'll mean the same in both.
-            I use this often enough that it forms part of my "default" header.
+            Also forget <code>basestring</code>.
           </aside>
         </section>
         <section>
@@ -325,7 +339,7 @@ except NameError:
           <pre><code class="python">from functools import reduce</code></pre>
           <aside class="notes">
             <p>If you need reduce, you need to import it. Python 2.7 includes
-            this in functools for compatibility</p>
+            this in functools for compatibility. No need for try's.</p>
           </aside>
         </section>
         <section data-transition="fade-in zoom-out">
@@ -344,7 +358,7 @@ except ImportError:
           </aside>
         </section>
         <section data-transition="zoom-in fade-out">
-          <img class="slide" src="whoa.jpg" />
+          <img class="slide" src="images/whoa.jpg" />
         </section>
         <section>
           <pre><code class="python">from __future__ import (
@@ -409,7 +423,7 @@ from functools import reduce</code></pre>
           <pre><code class="python">d = {1: 'a'}
 d.iteritems()</code></pre>
         </section>
-        <section data-background="#b5533c">
+        <section>
           <pre><code class="python">io.open('myfile.txt', 'rb')</code></pre>
           <pre><code class="python">stream = io.BytesIO()</code></pre>
           <pre><code class="python">d = {1: 'a'}
@@ -424,11 +438,23 @@ d.items()</code></pre>
           </aside>
         </section>
         <section data-background="#b5533c">
+          <pre><code class="python">print 'Hello world!'</code></pre>
+          <pre><code class="python">print &gt;&gt;sys.stderr, "Oh noes!"</code></pre>
+        </section>
+        <section>
+          <pre><code class="python">print("Hello world!")</code></pre>
+          <pre><code class="python">print("Oh noes!", file=sys.stderr)</code></pre>
+          <aside class="notes">
+            <p>Don't use old style prints, especially the weird C++ influenced
+            redirector.
+          </aside>
+        </section>
+        <section data-background="#b5533c">
           <pre><code class="python">class MyClass:
     def __init__(self, foo):
         super().__init__()</code></pre>
         </section>
-        <section data-background="#b5533c">
+        <section>
           <pre><code class="python">class MyClass(object):
     def __init__(self, foo):
         super(MyClass, self).__init__()</code></pre>
@@ -436,6 +462,38 @@ d.items()</code></pre>
             <p>If you're using classes, always declare the parent class, and
             when using super, always use the long form <code>super(class,
             instance)</code>
+          </aside>
+        </section>
+        <section data-background="#b5533c">
+          <pre><code class="python">try:
+    1 / 0
+except ZeroDivisionError, e:
+    print "Well, that was expected"
+except ValueError, IOError:
+    print "Weird"</code></pre>
+        </section>
+        <section>
+          <pre><code class="python">try:
+    1 / 0
+except ZeroDivisionError as e:
+    print("Well, that was expected")
+except (ValueError, IOError):
+    print("Weird")</code></pre>
+          <aside class="notes">
+            <p>Use <code>as</code> explicitly in all <code>except</code>
+            blocks to introduce a variable for the captured exception. Don't
+            use exception lists without surrounding them with parentheses.
+          </aside>
+        </section>
+        <section data-background="#b5533c">
+          <pre><code class="python">raise "Something went wrong!"</code></pre>
+        </section>
+        <section>
+          <pre><code class="python">raise Exception("Something went wrong!")</code></pre>
+          <aside class="notes">
+            <p>String exceptions are dead. The former won't even work in Python
+            2.7 (you'll get a <code>TypeError</code> - can't remember exactly
+            when that came in...).
           </aside>
         </section>
         <section data-background="#b5533c" data-transition="fade-in zoom-out">
