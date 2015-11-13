@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="../reveal.js/css/reveal.css">
-    <link rel="stylesheet" href="../reveal.js/css/theme/solarized.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/css/theme/sky.css" id="theme">
     <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
 
     <script>
@@ -27,8 +27,13 @@ document.getElementsByTagName('head')[0].appendChild(link);
   display: inline;
   border: 0 none;
   box-shadow: none;
-  max-height: 1em;
   vertical-align: middle;
+}
+
+.reveal section img.slide {
+  border: none;
+  box-shadow: none;
+  background: none;
 }
     </style>
   </head>
@@ -36,8 +41,8 @@ document.getElementsByTagName('head')[0].appendChild(link);
     <div class="reveal">
       <div class="slides">
         <section>
-          <h1>Making friends with Python 3</h1>
-          <h2>Why and how?</h2>
+          <img class="slide" width="200" data-src="python-logo.svg" />
+          <h2>Making friends with Python 3</h2>
         </section>
         <section>
           <h2>Vital Statistics</h2>
@@ -54,8 +59,11 @@ document.getElementsByTagName('head')[0].appendChild(link);
             If not, we can skip this section!</p>
           </aside>
         </section>
-        <section>
-          <h1>It's the future!</h1>
+        <section data-transition="fade-in zoom-out">
+          <h2>It's the future!</h2>
+        </section>
+        <section data-transition="zoom-in fade-out">
+          <img class="slide" data-src="the-future.jpg" />
           <aside class="notes">
             <ul>
               <li>New features only appear in Python 3 (asyncio, enum,
@@ -67,43 +75,65 @@ document.getElementsByTagName('head')[0].appendChild(link);
               won't know 2 in a few years</li>
               <li>3 is now faster than Python 2 (marginally, this isn't really
               a good enough reason)</li>
+            </ul>
           </aside>
         </section>
         <section>
-          <h1>Legacy support will end</h1>
-          <h2>(eventually)</h2>
+          <h2>2 is the past</h2>
+          <h3 class="fragment">(well &hellip; eventually)</h3>
           <aside class="notes">
-            <p>Not any time soon though; from the Python 2.7 release notes
-            <q>Python 2.7 is currently expected to remain supported by the core
-              development team &hellip; until at least 2020</q>. So, you've
-            got a while (
+            <p>Not any time soon though</p>
+          </aside>
+        </section>
+        <section>
+          <h2>From 2.7 release notes:</h2>
+          <blockquote>&ldquo;Python 2.7 is currently expected to remain
+            supported by the core development team &hellip; until at least
+          2020&rdquo;</blockquote>
+          <aside class="notes">
+            <p>So, you've got a while! In other words, no-one ever expected a
+            fast, big-bang migration. The plan has always been a slow drift
+            over to 3, but it is true that as the majority of libraries are now
+            ported, the pace has picked up a bit.</p>
+          </aside>
         </section>
         <section>
           <h1>How?</h1>
+          <aside class="notes">
+
+          </aside>
+        </section>
+        <section data-transition="fade-in zoom-out">
           <h2>If you're on &lt;2.7</h2>
+        </section>
+        <section data-transition="zoom-in fade-out">
+          <img class="slide" data-src="upgrade.svg" />
           <aside class="notes">
             <p>If you need to support Python 2.6 or below, forget it. Or more
             precisely, if you're on Scientific Linux 6, you need to persude
             your site admins to move to Scientific Linux 7 (and Python 2.7) now
             (2.6 was retired in 2013 - you've had no fixes from the core team
-            for 2 years!)</p>
+            for 2 years, although your distro vendors have hopefully been
+            back-porting them!)</p>
             <p>2.7 adds set literals, dict and set comprehensions, multiple
             context managers, the <tt>io</tt> library, the <tt>OrderedDict</tt>
             type, the <tt>argparse</tt> module, the <tt>memoryview</tt> object
             (albeit incomplete), auto-numbering in <tt>.format</tt> and some
-            other less important stuff.</p>
-            <p>All of the above are used in Python 3 (set literals, set and
-            dict comprehensions, and the io library in particular!)</p>
+            other less important stuff. All of the above are used in Python 3
+            (set literals, set and dict comprehensions, and the io library in
+            particular!)</p>
           </aside>
         </section>
-        <section>
-          <h1>How?</h1>
+        <section data-transition="fade-in zoom-out">
           <h2>If you're on &gt;=2.7</h2>
+        </section>
+        <section data-transition="zoom-in fade-out">
+          <img class="slide" data-src="lets-go.gif" />
           <aside class="notes">
-            <p>You can (probably) write idiomatic Python 3 right away without
-            massive effort if you follow a few hints from this presentation
-            (note: I'm not saying you need to run Python 3 yet, just that you
-            need to write it!)
+            <p>You can (probably) write (mostly) idiomatic Python 3 right away
+            without massive effort if you follow a few hints from this
+            presentation (note: I'm not saying you need to run Python 3 yet,
+            just that you need to write it!)</p>
           </aside>
         </section>
         <section>
@@ -232,6 +262,10 @@ except ImportError:
           <pre><code class="python">a, *b, c = [1, 2, 3, 4, 5]</code></pre>
           <pre><code class="python">def f(a, *, foo=2, bar=3):
     pass</code></pre>
+          <pre><code class="python">from math import isclose
+import statistics
+
+a = b @ x</code></pre>
           <aside class="notes">
             <p>It should go without saying, but if you want to use Python 3
             specific constructs like the above: tough. You don't get to play
@@ -242,8 +276,6 @@ except ImportError:
                ip-address/network types, infix matrix mult, statistics module,
           enumerations, math.isclose, asyncio, type hints, expanded memoryview,
           -->
-        <section>
-        </section>
         <section>
           <h2>Vital Statistics</h2>
           <dl>
@@ -304,7 +336,7 @@ Reveal.initialize({
     mouseWheel: false,               // Enable slide navigation via mouse wheel
     hideAddressBar: true,            // Hides the address bar on mobile devices
     previewLinks: false,             // Opens links in an iframe preview overlay
-    transition: 'slide',             // Transition style (none/fade/slide/convex/concave/zoom)
+    transition: 'fade',              // Transition style (none/fade/slide/convex/concave/zoom)
     transitionSpeed: 'default',      // Transition speed (default/fast/slow)
     backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
     viewDistance: 3,                 // Number of slides away from the current that are visible
