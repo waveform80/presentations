@@ -1,0 +1,16 @@
+digraph G {
+    node [font=Ubuntu, fontsize=11];
+    edge [font=Ubuntu, fontsize=11];
+
+    data [shape=note];
+    filename [label="foo", shape=box];
+    process1 [label="process", shape=oval];
+    process2 [label="process", shape=oval];
+
+    filename->data;
+    process1->data [label="fd6"];
+    process2->data [label="fd7"];
+    process1->filename [style=dotted];
+    process2->filename [style=dotted];
+
+}

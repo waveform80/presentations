@@ -1,0 +1,5 @@
+digraph G {
+    data [shape=note];
+    filename [label="foo", shape=box];
+    filename->data;
+}

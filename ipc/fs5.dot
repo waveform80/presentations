@@ -1,0 +1,9 @@
+digraph G {
+    node [font=Ubuntu, fontsize=11];
+    edge [font=Ubuntu, fontsize=11];
+
+    data2 [label="data", shape=note];
+    filename [label="foo", shape=box];
+
+    filename->data2;
+}
