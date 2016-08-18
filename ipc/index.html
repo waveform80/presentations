@@ -116,27 +116,27 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <h2>Demo</h2>
           </section>
           <section data-transition="slide fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
-            <img src="fs1.svg" />
+            <h2>What <em>is</em> a file?!</h2>
+            <img data-src="fs1.svg" />
           </section>
           <section data-transition="fade-in fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
+            <h2>So what's a handle?</h2>
             <img src="fs2.svg" />
           </section>
           <section data-transition="fade-in fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
+            <h2>The name's expendable?</h2>
             <img src="fs3.svg" />
           </section>
           <section data-transition="fade-in fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
+            <h2>In fact totally distinct!</h2>
             <img src="fs4.svg" />
           </section>
           <section data-transition="fade-in fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
+            <h2>Back where we started</h2>
             <img src="fs5.svg" />
           </section>
           <section data-transition="fade-in fade-out" data-transition-speed="fast">
-            <h2>What *is* a file?!</h2>
+            <h2>So the link thing &hellip;</h2>
             <img src="fs6.svg" />
           </section>
         </section>
@@ -146,7 +146,17 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <p>mmap</p>
           </section>
           <section>
+            <h2>Virtual memory</h2>
+            <ul>
+              <li class="fragment">Every process sees the same address space</li>
+              <li class="fragment">Memory pages can be backed by nothing!</li>
+              <li class="fragment">Memory pages can be backed by RAM</li>
+              <li class="fragment">Memory pages can be backed by files</li>
+            </ul>
+          </section>
+          <section>
             <h2>Demo</h2>
+            <!-- Demo creation of two mmaps -->
           </section>
         </section>
         <section>
@@ -154,7 +164,17 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <h2>Part 4</h2>
             <p>Pipes, FIFOs, Sockets, etc.</p>
           </section>
-        </section>
+          <section>
+            <h2>No, not <em>those</em> sockets</h2>
+            <ul>
+              <li>UNIX sockets, like files but &hellip;</li>
+              <li>FIFOs, like files but &hellip;</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Demo</h2>
+            <!-- Demo FIFOs and maybe sockets -->
+          </section>
         </section>
         <section>
           <section>
