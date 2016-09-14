@@ -87,17 +87,20 @@ document.getElementsByTagName('head')[0].appendChild(link);
           GIPO.setwarnings(False)
           GPIO.setup(17, GPIO.OUT)
           while True:
-              GPIO.output(17, 1)
+              GPIO.output(17, True)
               sleep(1)
-              GPIO.output(17, 0)
+              GPIO.output(17, False)
               sleep(1)
           </code></pre>
           <pre class="fragment replace"><code class="python">
           from gpiozero import LED
-          from signal import pause
+          from time import sleep
           led = LED(17)
-          led.blink()
-          pause()
+          while True:
+              led.on()
+              sleep(1)
+              led.off()
+              sleep(1)
           </code></pre>
         </section>
         <section>
@@ -172,12 +175,12 @@ document.getElementsByTagName('head')[0].appendChild(link);
           </code></pre>
           <pre class="fragment replace"><code class="python">
           class Animal(Eukaryote):
-              def eat(self, food): pass
-              def excrete(self, where): pass
+              def eat(self, food): # ...
+              def excrete(self, where): # ...
 
           class Fungi(Eukaryote):
-              def sit_around(self): pass
-              def release_spores(self, n): pass
+              def sit_around(self): # ...
+              def release_spores(self, n): # ...
           </code></pre>
         </section>
         <section>
@@ -248,54 +251,54 @@ document.getElementsByTagName('head')[0].appendChild(link);
           class DigitalOutputDevice(OutputDevice):
               def __init__(
                   self, pin=None, active_high=True,
-                  initial_value=False): pass
-              def close(self): pass
-              def on(self): pass
-              def off(self): pass
+                  initial_value=False): # ...
+              def close(self): # ...
+              def on(self): # ...
+              def off(self): # ...
               def blink(
                   self, on_time=1, off_time=1, n=None,
-                  background=True): pass
+                  background=True): # ...
           </code></pre>
           <pre class="fragment replace"><code class="python">
           class OutputDevice(SourceMixin, GPIODevice):
               def __init__(
                   self, pin=None, active_high=True,
-                  initial_value=False): pass
-              def on(self): pass
-              def off(self): pass
-              def toggle(self): pass
+                  initial_value=False): # ...
+              def on(self): # ...
+              def off(self): # ...
+              def toggle(self): # ...
               @property
-              def value(self): pass
+              def value(self): # ...
               @property
-              def active_high(self): pass
+              def active_high(self): # ...
           </code></pre>
           <pre class="fragment replace"><code class="python">
           class GPIODevice(Device):
-              def __init__(self, pin=None): pass
-              def close(self): pass
+              def __init__(self, pin=None): # ...
+              def close(self): # ...
               @property
-              def closed(self): pass
+              def closed(self): # ...
               @property
-              def pin(self): pass
+              def pin(self): # ...
               @property
-              def value(self): pass
+              def value(self): # ...
           </code></pre>
           <pre class="fragment replace"><code class="python">
           class Device(ValuesMixin, GPIOBase):
               @property
-              def value(self): pass
+              def value(self): # ...
               @property
-              def is_active(self): pass
+              def is_active(self): # ...
           </code></pre>
           <pre class="fragment replace"><code class="python">
           class GPIOBase(GPIOMeta(nstr('GPIOBase'), (), {})):
-              def __setattr__(self, name, value): pass
-              def __del__(self): pass
-              def close(self): pass
+              def __setattr__(self, name, value): # ...
+              def __del__(self): # ...
+              def close(self): # ...
               @property
-              def closed(self): pass
-              def __enter__(self): pass
-              def __exit__(self, exc_type, exc_value, exc_tb): pass
+              def closed(self): # ...
+              def __enter__(self): # ...
+              def __exit__(self, exc_type, exc_value, exc_tb): # ...
           </code></pre>
         </section>
         <section>
@@ -305,13 +308,13 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h2>Meta-classes: <em>why?!</em></h2>
           <pre><code class="python">
           class GPIOBase(GPIOMeta(nstr('GPIOBase'), (), {})):
-              def __setattr__(self, name, value): pass
-              def __del__(self): pass
-              def close(self): pass
+              def __setattr__(self, name, value): # ...
+              def __del__(self): # ...
+              def close(self): # ...
               @property
-              def closed(self): pass
-              def __enter__(self): pass
-              def __exit__(self, exc_type, exc_value, exc_tb): pass
+              def closed(self): # ...
+              def __enter__(self): # ...
+              def __exit__(self, exc_type, exc_value, exc_tb): # ...
           </code></pre>
         </section>
         <section>
@@ -332,14 +335,8 @@ document.getElementsByTagName('head')[0].appendChild(link);
           pause()
           </code></pre>
           <pre class="fragment replace"><code class="python">
-          >>> from gpiozero import Button
-          >>> def button_was_pressed():
-          ...     print("Don't push the button!")
-          ...
-          >>> b = Button(21)
-          >>> b.pressed = button_was_pressed
           Traceback (most recent call last):
-            File "<stdin>", line 1, in <module>
+            File "dont_push.py", line 8, in <module>
             File "gpiozero/devices.py", line 158, in __setattr__
               self.__class__.__name__, name))
           AttributeError: 'Button' object has no attribute 'pressed'
@@ -418,6 +415,14 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <img src="say_wat_again.jpg" />
         </section>
         <section>
+          <dl>
+            <dt>Name</dt><dd>Ben Nuttall</dd>
+            <dt>Occupation</dt><dd>Making scary code, so you don't have to!</dd>
+            <dt>Twitter</dt><dd><a href="https://twitter.com/ben_nuttall">@ben_nuttall</a></dd>
+            <dt>Blog</dt><dd><a href="http://bennuttall.com">bennuttall.com</a></dd>
+          </dl>
+        </section>
+        <section>
           <h2>Vital Statistics</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
@@ -425,11 +430,6 @@ document.getElementsByTagName('head')[0].appendChild(link);
             <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
             <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
           </dl>
-        </section>
-        <section>
-          <h2>Available Now!</h2>
-          <p>from your nearest web-server</p>
-          <a href="http://www.waveform.org.uk/presentations/gpiozero/">www.waveform.org.uk/presentations/gpiozero/</a>
         </section>
         <section>
           <h2>Thank You</h2>
