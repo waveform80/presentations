@@ -85,15 +85,17 @@ document.getElementsByTagName('head')[0].appendChild(link);
         </section>
         <section>
           <pre><code class="python">
-          from RPi import GPIO
+          import RPi.GPIO as GPIO
           from time import sleep
+
           GPIO.setmode(GPIO.BCM)
           GIPO.setwarnings(False)
           GPIO.setup(17, GPIO.OUT)
+
           while True:
-              GPIO.output(17, True)
+              GPIO.output(17, GPIO.HIGH)
               sleep(1)
-              GPIO.output(17, False)
+              GPIO.output(17, GPIO.LOW)
               sleep(1)
           </code></pre>
         </section>
@@ -101,12 +103,37 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <pre><code class="python">
           from gpiozero import LED
           from time import sleep
+
           led = LED(17)
+
           while True:
               led.on()
               sleep(1)
               led.off()
               sleep(1)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          import RPi.GPIO as GPIO
+          from time import sleep
+
+          GPIO.setmode(GPIO.BCM)
+          GIPO.setwarnings(False)
+          GPIO.setup(18, GPIO.IN, GPIO.PUD_UP)
+
+          GPIO.wait_for_edge(18, GPIO.FALLING)
+          print("Don't push the button!")
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import Button
+          from time import sleep
+
+          button = Button(18)
+          button.wait_for_press()
+          print("Don't push the button!")
           </code></pre>
         </section>
         <section>
@@ -146,6 +173,40 @@ document.getElementsByTagName('head')[0].appendChild(link);
         </section>
         <section>
           <img src="smart_kid.jpg" />
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import LED
+          from time import sleep
+
+          led = LED(17)
+
+          while True:
+              led.on()
+              sleep(1)
+              led.off()
+              sleep(1)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import LED
+          from time import sleep
+
+          led = LED(17)
+          led.blink()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import LED
+          from time import sleep
+          from signal import pause
+
+          led = LED(17)
+          led.blink()
+          pause()
+          </code></pre>
         </section>
         <section>
           <img src="bad_kid.jpg" />
@@ -204,8 +265,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <pre><code class="python">
           from gpiozero import LED, Button
+
           led = LED(17)
           btn = Button(2)
+
           while True:
               if btn.is_pressed:
                   led.on()
@@ -217,8 +280,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <pre><code class="python">
           from gpiozero import LED, Button
           from signal import pause
+
           led = LED(17)
           btn = Button(2)
+
           btn.when_pressed = led.on
           btn.when_released = led.off
           pause()
@@ -228,8 +293,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <pre><code class="python">
           from gpiozero import LED, Button
           from signal import pause
+
           led = LED(17)
           btn = Button(2)
+
           led.source = btn.values
           pause()
           </code></pre>
