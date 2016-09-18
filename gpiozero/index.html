@@ -661,6 +661,38 @@ document.getElementsByTagName('head')[0].appendChild(link);
           </code></pre>
         </section>
         <section>
+          <h2>Pin implementations</h2>
+          <table>
+            <tbody>
+              <tr><td><strong>RPi.GPIO</strong></td><td>C, software PWM, default</td></tr>
+              <tr><td><strong>RPIO</strong></td><td>C, DMA-based PWM</td></tr>
+              <tr><td><strong>PiGPIO</strong></td><td>C, DMA-based PWM, remote pins</td></tr>
+              <tr><td><strong>Native</strong></td><td>Pure python, fallback</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2><em>Remote</em> pins?!</h2>
+        </section>
+        <section>
+          <pre><code class="bash">
+          $ export GPIOZERO_PIN_FACTORY=PiGPIOPin
+          $ export PIGPIO_ADDR=192.168.1.5
+          $ python
+          </code></pre>
+        </section>
+        <section>
+          <h2>Runs on</h2>
+          <table>
+            <tbody>
+              <td><img class="diagram" src="linux.png" /></td>
+              <td><img class="diagram" src="macosx.png" /></td>
+              <td><img class="diagram" src="windows.png" /></td>
+              <td><img class="diagram" src="raspberry_pi.png" /></td>
+            </tbody>
+          </table>
+        </section>
+        <section>
           <h2>Cool toys!</h2>
           <table>
             <tr>
