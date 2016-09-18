@@ -2,8 +2,9 @@
   <head>
     <meta chatset="utf-8">
     <title>GPIO Zero</title>
-    <meta name="description" content="Designing for education is *hard*">
-    <meta name="author" content="Ben Nuttall and Dave Jones">
+    <meta name="description" content="Designing for education is hard">
+    <meta name="author" content="Ben Nuttall">
+    <meta name="author" content="Dave Jones">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
@@ -26,6 +27,11 @@
 
 .reveal section img.diagram {
   box-shadow: none;
+  background: transparent;
+}
+
+.reveal table td {
+  border-bottom: 0 none;
 }
 </style>
 
@@ -52,14 +58,16 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h2>Vital Statistics</h2>
           <dl>
             <dt>Name</dt><dd>Ben Nuttall</dd>
+            <dt>Occupation</dt><dd>The Pi'd Piper of Cambridge</dd>
             <dt>Twitter</dt><dd><a href="https://twitter.com/ben_nuttall">@ben_nuttall</a></dd>
-            <dt>Blog</dt><dd><a href="http://bennuttall.com">bennuttall.com</a></dd>
+            <dt>GitHub</dt><dd><a href="http://github.com/bennuttall">github.com/bennuttall</a></dd>
           </dl>
         </section>
         <section>
-          <h2>Vital Statistics</h2>
+          <h2>Vitalstatistix</h2>
           <dl>
             <dt>Name</dt><dd>Dave Jones</dd>
+            <dt>Occupation</dt><dd>Making scary code, so you don't have to!</dd>
             <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
             <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
           </dl>
@@ -67,6 +75,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h2>So, what is it?</h2>
           <p>A library that makes physical computing easy</p>
+        </section>
+        <section>
+          <h2>&ldquo;Physical&rdquo; computing?</h2>
         </section>
         <section>
           <img src="physical_computing.jpg" />
@@ -89,7 +100,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
           from time import sleep
 
           GPIO.setmode(GPIO.BCM)
-          GIPO.setwarnings(False)
+          GPIO.setwarnings(False)
           GPIO.setup(17, GPIO.OUT)
 
           while True:
@@ -112,6 +123,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
               led.off()
               sleep(1)
           </code></pre>
+        </section>
+        <section>
+          <img class="diagram" src="button_wiring.svg" />
         </section>
         <section>
           <pre><code class="python">
@@ -298,33 +312,6 @@ document.getElementsByTagName('head')[0].appendChild(link);
           btn = Button(2)
 
           led.source = btn.values
-          pause()
-          </code></pre>
-        </section>
-        <section>
-          <h2>Declarative?</h2>
-        </section>
-        <section>
-          <img src="traffic_light.jpg" />
-        </section>
-        <section>
-          <pre><code class="python">
-          from travispy import TravisPy
-          from gpiozero import LED
-          from gpiozero.tools import negated
-          from time import sleep
-          from signal import pause
-
-          def status(repo, delay=3600):
-              t = TravisPy()
-              r = t.repo(repo)
-              while True:
-                  yield r.last_build_state == 'passed'
-                  sleep(delay) # don't hit Travis constantly
-
-          tl = TrafficLights(21, 20, 16)
-          tl.red.source = negated(tl.green.values)
-          tl.green.source = status('RPi-Distro/python-gpiozero')
           pause()
           </code></pre>
         </section>
@@ -532,35 +519,208 @@ document.getElementsByTagName('head')[0].appendChild(link);
           </code></pre>
         </section>
         <section>
+          <h2>More WAT?</h2>
+        </section>
+        <section>
           <img src="say_wat_again.jpg" />
         </section>
         <section>
+          <h2>So that declarative thing &hellip;</h2>
+        </section>
+        <section>
+          <table>
+            <tr>
+              <th class="fragment" data-fragment-index="2">
+                Outputs have <code>source</code>
+              </th>
+              <th class="fragment" data-fragment-index="3">
+              </th>
+              <th class="fragment" data-fragment-index="1">
+                All devices have <code>values</code>
+              </th>
+            </tr>
+            <tr>
+              <td class="fragment" data-fragment-index="2">
+                LED<br/>
+                Buzzer<br/>
+                Energenie<br/>
+              </td>
+              <td class="fragment" data-fragment-index="3">
+                <img style="position: fixed; top: 34%; left: 20%; width: 7em" class="diagram" src="arrows.svg" />
+              </td>
+              <td class="fragment" data-fragment-index="1">
+                LED<br/>
+                Button<br/>
+                LightSensor<br/>
+                DistanceSensor<br/>
+              </td>
+            </tr>
+          </table>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import LED, Button
+          from signal import pause
+
+          led = LED(17)
+          btn = Button(2)
+
+          led.source = btn.values
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import LED, Button
+          from gpiozero.tools import all_values
+          from signal import pause
+
+          led = LED(17)
+          btn1 = Button(2)
+          btn2 = Button(3)
+
+          led.source = all_values(btn1.values, btn2.values)
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import Energenie, Button
+          from signal import pause
+
+          lamp = Energenie(1)
+          btn = Button(2)
+
+          lamp.source = btn.values
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import Robot, MCP3008
+          from signal import pause
+
+          robot = Robot(left=(17, 18), right=(3, 4))
+          left_pot = MCP3008(channel=0)
+          right_pot = MCP3008(channel=1)
+
+          # TANK!!!
+          robot.source = zip(left_pot.values, right_pot.values)
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import Energenie, MCP3008
+          from gpiozero.tools import booleanized
+          from signal import pause
+
+          heater = Energenie(1)
+          thermometer = MCP3008(channel=0)
+
+          heater.source = booleanized(thermometer.values, 0.0, 0.5)
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="python">
+          from gpiozero import Energenie, MCP3008
+          from gpiozero.tools import booleanized
+          from signal import pause
+
+          heater = Energenie(1)
+          thermometer = MCP3008(channel=0)
+
+          heater.source = booleanized(thermometer.values, 0.0, 0.5,
+              hysteresis=0.1)
+          pause()
+          </code></pre>
+        </section>
+        <section>
+          <img src="traffic_light.jpg" />
+        </section>
+        <section>
+          <pre><code class="python">
+          from travispy import TravisPy
+          from gpiozero import LED
+          from gpiozero.tools import negated
+          from time import sleep
+          from signal import pause
+
+          def status(repo, delay=3600):
+              t = TravisPy()
+              r = t.repo(repo)
+              while True:
+                  yield r.last_build_state == 'passed'
+                  sleep(delay) # don't hit Travis constantly
+
+          tl = TrafficLights(21, 20, 16)
+          tl.red.source = negated(tl.green.values)
+          tl.green.source = status('RPi-Distro/python-gpiozero')
+          pause()
+          </code></pre>
+        </section>
+        <section>
           <h2>Cool toys!</h2>
+          <table>
+            <tr>
+              <td><img class="fragment diagram" src="tactile-push-button.png" /></td>
+              <td><img class="fragment diagram" src="pir.png" /></td>
+              <td><img class="fragment diagram" src="ldr.png" /></td>
+            </tr>
+            <tr>
+              <td><img class="fragment diagram" src="ultrasonic-distance-sensor.png" /></td>
+              <td><img class="fragment diagram" src="motor.png" /></td>
+              <td><img class="fragment diagram" src="servo.png" /></td>
+            </tr>
+          </table>
+        </section>
+        <section>
+          <h2>Timeline</h2>
+          <table>
+            <tbody>
+              <tr><td><strong>14th Sep 2015</strong></td><td>Initial commit on GitHub</td></tr>
+              <tr><td><strong>15th Sep 2015</strong></td><td>First PR, first alpha release</td></tr>
+              <tr><td><strong>23rd Sep 2015</strong></td><td>Sprints at PyConUK</td></tr>
+              <tr><td><strong>28th Sep 2015</strong></td><td>v0.6 beta</td></tr>
+              <tr><td><strong>16th Nov 2015</strong></td><td>v1.0 released</td></tr>
+              <tr><td><strong>31st Oct 2016</strong></td><td>v1.3 released</td></tr>
+              <tr><td><strong>31st Oct 2016</strong></td><td>v1.3.1 released (oops)</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Community growth</h2>
+          <table>
+            <thead>
+              <tr><th>v1.0</th><th>v1.3</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>200 commits</td><td>581 commits</td></tr>
+              <tr><td>6 contributors (2 major)</td><td>13 contributors (3 major)</td></tr>
+              <tr><td>53 issues</td><td>204 issues</td></tr>
+              <tr><td>50 PRs</td><td>235 PRs</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Issue driven development</h2>
+        </section>
+        <section>
+          <h2>Future Development</h2>
           <ul>
-            <li>RGBLED</li>
-            <li>Motor</li>
-            <li>Servo</li>
-            <li>Robot (!)</li>
-            <li>MCP3008 (?!)</li>
-            <li>much more!</li>
+            <li>Support more devices</li>
+            <li>Move default pins to PiGPIO</li>
+            <li>Remote SPI and I2C support</li>
+            <li>Promote zero boilerplate philosophy in other projects</li>
           </ul>
         </section>
         <section>
-          <h2>Vital Statistics</h2>
+          <h2>GPIO Zero</h2>
           <dl>
-            <dt>Name</dt><dd>Ben Nuttall</dd>
-            <dt>Occupation</dt><dd>The Pi'd Piper of Cambridge</dd>
-            <dt>Twitter</dt><dd><a href="https://twitter.com/ben_nuttall">@ben_nuttall</a></dd>
-            <dt>Blog</dt><dd><a href="http://bennuttall.com">bennuttall.com</a></dd>
-          </dl>
-        </section>
-        <section>
-          <h2>Vital Statistics</h2>
-          <dl>
-            <dt>Name</dt><dd>Dave Jones</dd>
-            <dt>Occupation</dt><dd>Making scary code, so you don't have to!</dd>
-            <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
-            <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+            <dt>Documents</dt><dd><a href="https://gpiozero.readthedocs.io/">gpiozero.readthedocs.io</a></dd>
+            <dt>GitHub</dt><dd><a href="https://github.com/RPi-Distro/python-gpiozero">github.com/RPi-Distro/python-gpiozero</a></dd>
+            <dt>Join us!</dt><dd>at the sprints tomorrow</dd>
           </dl>
         </section>
         <section>
