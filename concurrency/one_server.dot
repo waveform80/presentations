@@ -1,0 +1,16 @@
+digraph G {
+    graph [bgcolor=transparent];
+    node [shape=record, style=filled, fillcolor="#ddddff",
+          fontname=Roboto, fontsize=14];
+
+    worker [label="{<t>worker|<q>REP}"];
+    client1 [label="{<q>REQ|<t>client}"];
+    client2 [label="{<q>REQ|<t>client}"];
+    client3 [label="{<q>REQ|<t>client}"];
+    client4 [label="{<q>REQ|<t>client}"];
+
+    worker:q->client1:q [dir=both];
+    worker:q->client2:q [dir=both];
+    worker:q->client3:q [dir=both];
+    worker:q->client4:q [dir=both];
+}

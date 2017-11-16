@@ -1,0 +1,586 @@
+<html lang="en">
+  <head>
+    <meta chatset="utf-8">
+    <title>Concurrency with ZeroMQ</title>
+    <meta name="description" content="All your queues are belong to us">
+    <meta name="author" content="Dave Jones">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/serif.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+<style type="text/css">
+.reveal .fragment.replace.visible:not(.current-fragment) {
+  display: none;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+}
+
+.reveal section img {
+  border: 0 none;
+  box-shadow: 0 0 8px #220;
+  vertical-align: middle;
+}
+
+.reveal section img.diagram {
+  box-shadow: none;
+  background: transparent;
+}
+
+.reveal table td {
+  border-bottom: 0 none;
+}
+</style>
+
+    <script>
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../reveal.js/' + (window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css');
+document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Concurrency with ZeroMQ</h1>
+          <h2>or: All Your Queues are Belong to Us</h2>
+        </section>
+        <section>
+          <h2>Vitalstatistix</h2>
+          <dl>
+            <dt>Name</dt><dd>Dave Jones</dd>
+            <dt>Occupation</dt><dd>Queueing like an Englishman</dd>
+            <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+            <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+          </dl>
+        </section>
+        <section>
+          <h1>Why?</h1>
+        </section>
+        <section>
+          <h1>How?</h1>
+        </section>
+        <section>
+          <h2>"There should be one &hellip; obvious way to do it"</h2>
+          <ul>
+            <li><code>threading</code></li>
+            <li><code>multiprocessing</code></li>
+            <li><code>asyncio</code></li>
+            <li>&hellip; and that's just in the stdlib</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Why so many?</h2>
+          <ul>
+            <li>No one solution is a panacea</li>
+            <li>Each has issues in certain areas</li>
+            <li>None are good at <em>everything</em></li>
+            <li class="fragment">ZeroMQ is Yet Another solution, it's not The Solution</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Why is concurrency hard?</h1>
+        </section>
+        <section>
+          <h2>The accounting problem</h2>
+          <table>
+            <thead>
+              <tr><th>Task 1</th><th>Task 2</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>acc = 1000</code></td><td>&nbsp;</td></tr>
+              <tr><td><code>acc = acc + 100</code></td><td><code>acc = acc - 100</code></td></tr>
+              <tr><td>&nbsp;</td><td><code>acc == 1000</code>?</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>The accounting problem</h2>
+          <table>
+            <thead>
+              <tr><th>Task 1</th><th>Task 2</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>acc IS 1000</code></td><td>&nbsp;</td></tr>
+              <tr><td><code>LOAD acc</code></td><td><code>LOAD acc</code></td></tr>
+              <tr><td><code>ADD 100</code></td><td><code>SUB 100</code></td></tr>
+              <tr><td><code>SAVE acc</code></td><td><code>SAVE acc</code></td></tr>
+              <tr><td>&nbsp;</td><td><code>acc IS 1000</code>?</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Solutions</h2>
+          <ul>
+            <li>Control yield points</li>
+            <li>Lock to serialize access</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Enough of the theory</h1>
+        </section>
+        <section>
+          <h1>ZeroMQ</h1>
+          <h2>Not really about queues</h2>
+        </section>
+        <section>
+          <h1>ZeroMQ</h1>
+          <h2>Sockets on steroids</h2>
+        </section>
+        <section>
+          <h2>Sockets on steroids</h2>
+          <ul>
+            <li>Most of the nice bits</li>
+            <li>None of the nasty bits</li>
+            <li>Lots of really useful, but simple, patterns</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Sockets: the nice bits</h2>
+          <pre><code class="python">
+          import socket
+
+          s = socket.socket()
+          s.connect(('somehost', 8080))
+          s.send(b'DATA')
+          s.recv(8)
+          s.close()
+          </code></pre>
+        </section>
+        <section>
+          <h2>Sockets: the nasty bits</h2>
+          <pre><code class="python">
+          import socket
+
+          s = socket.socket()
+          s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+          s.bind(('0.0.0.0', 8080))
+          s.listen(1)
+          c, addr = s.accept() # another socket per connection?!
+          c.send(b'DATA')
+          c.recv(8)
+          c.close()
+          s.close()
+          </code></pre>
+        </section>
+        <section>
+          <h2>ZeroMQ: it's all nice bits!</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.PULL)
+          server.bind('inproc://foo')
+          client = ctx.socket(zmq.PUSH)
+          client.connect('inproc://foo')
+
+          client.send(b'DATA')
+          print(repr(server.recv()))
+          </code></pre>
+        </section>
+        <section>
+          <h2>How about &gt;1 client?</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.PULL)
+          server.bind('inproc://foo')
+          clients = [ctx.socket(zmq.PUSH) for i in range(10)]
+          for client in clients:
+              client.connect('inproc://foo')
+              client.send(b'DATA')
+
+          for i in range(10):
+              print(repr(server.recv()))
+          </code></pre>
+        </section>
+        <section>
+          <h2>Backwards?</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.PUSH)
+          server.bind('inproc://foo')
+          clients = [ctx.socket(zmq.PULL) for i in range(10)]
+          poller = zmq.Poller()
+          for client in clients:
+              client.connect('inproc://foo')
+              poller.register(client, zmq.POLLIN)
+
+          for client in clients:
+              server.send(b'DATA')
+          for sock, flags in poller.poll(0):
+              print(repr(sock.recv()))
+          </code></pre>
+        </section>
+        <section>
+          <h2>Two way?</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.REP)
+          server.bind('inproc://foo')
+          clients = [ctx.socket(zmq.REQ) for i in range(10)]
+          for i, client in enumerate(clients):
+              client.connect('inproc://foo')
+              client.send_string('FOO%d' % i)
+
+          while server.poll(100):
+              msg = server.recv_string()
+              server.send_string(msg.replace('FOO', 'BAR'))
+          for client in clients:
+              print(client.recv_string())
+          </code></pre>
+        </section>
+        <section>
+          <h2>Async responses</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.ROUTER)
+          server.bind('inproc://foo')
+          clients = [ctx.socket(zmq.REQ) for i in range(10)]
+          for i, client in enumerate(clients):
+              client.connect('inproc://foo')
+              client.send_string('FOO%d' % i)
+
+          messages = []
+          while server.poll(0):
+              messages.append(server.recv_multipart())
+          for msg in messages:
+              print(repr(msg))
+          </code></pre>
+        </section>
+        <section>
+          <h2>Async responses</h2>
+          <pre><code class="python">
+          # ...
+
+          messages = []
+          while server.poll(0):
+              messages.append(server.recv_multipart())
+          for addr, empty, msg in messages:
+              msg = msg.decode('utf-8')
+              msg = msg.replace('FOO', 'BAR')
+              msg = msg.encode('utf-8')
+              server.send_multipart([addr, empty, msg])
+          for client in clients:
+              print(client.recv_string())
+          </code></pre>
+        </section>
+        <section>
+          <h2>Distribution</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          server = ctx.socket(zmq.PUB)
+          server.bind('inproc://foo')
+          clients = [ctx.socket(zmq.SUB) for i in range(10)]
+          for i, client in enumerate(clients):
+              client.connect('inproc://foo')
+              client.subscribe('') # modern version...
+
+          server.send_string('FOO BAR')
+          for client in clients:
+              print(client.recv_string())
+          </code></pre>
+        </section>
+        <section>
+          <h2>Socket types</h2>
+          <table>
+            <thead>
+              <tr><th>Socket 1</th><th>&nbsp;</th><th>Socket 2</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>PUSH</td><td>&rarr;</td><td>PULL</td></tr>
+              <tr><td>REQ</td><td>&harr;</td><td>REP</td></tr>
+              <tr><td>REQ</td><td>&harr;</td><td>ROUTER</td></tr>
+              <tr><td>PUB</td><td>&rarr;</td><td>SUB</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Transmission types</h2>
+          <table>
+            <thead>
+              <tr><th>Send</th><th>Receive</th><th>Transmits</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>send</td><td>recv</td><td>bytes</td></tr>
+              <tr><td>send_multipart</td><td>recv_multipart</td><td>[bytes]</td></tr>
+              <tr><td>send_string</td><td>recv_string</td><td>str</td></tr>
+              <tr><td>send_json</td><td>recv_json</td><td>dict/list</td></tr>
+              <tr><td>send_pyobj</td><td>recv_pyobj</td><td>object</td></tr>
+              <tr><td>send_serialized</td><td>recv_serialized</td><td>object</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Building with ZeroMQ</h2>
+          <ol>
+            <li><em>No sharing state!</em></li>
+            <li>Divide script into simple tasks</li>
+            <li>Tasks can be threads if you want</li>
+            <li><em>Don't use locks</em> (or events, conditions, etc.)</li>
+            <li>All communication between tasks over queues</li>
+          </ol>
+        </section>
+        <section>
+          <h1>Show me the code!</h1>
+        </section>
+        <section>
+          <h2>A terrible RNG</h2>
+          <pre><code class="python">
+          from random import random
+          from time import time, sleep
+
+          def get_random(lo=0, hi=1):
+              start = time()
+              sleep(lo + random() * (hi - lo))
+              return time() - start
+          </code></pre>
+        </section>
+        <section>
+          <h2>A terrible RNG server</h2>
+          <pre><code class="python">
+          import zmq
+          from random import random
+          from time import time, sleep
+
+          def get_random(lo=0, hi=1):
+              start = time()
+              sleep(lo + random() * (hi - lo))
+              return time() - start
+
+          ctx = zmq.Context.instance()
+          sock = ctx.socket(zmq.REP)
+          sock.bind('ipc:///tmp/random')
+          while True:
+              lo, hi = sock.recv_json()
+              sock.send_json(get_random(lo, hi))
+          </code></pre>
+        </section>
+        <section>
+          <h2>A terrible RNG client</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          sock = ctx.socket(zmq.REQ)
+          sock.connect('ipc:///tmp/random')
+
+          def get_random(lo=0, hi=1):
+              sock.send_json([lo, hi])
+              return sock.recv_json()
+
+          for i in range(10):
+              print(get_random())
+          </code></pre>
+        </section>
+        <section>
+          <h2>Problem: latency!</h2>
+          <img class="diagram" src="one_server.svg" />
+        </section>
+        <section>
+          <h2>Solution: load sharing!</h2>
+          <img class="diagram" src="load_sharing.svg" />
+        </section>
+        <section>
+          <h2>Load sharing worker</h2>
+          <pre><code class="python">
+          import zmq
+          from random import random
+          from time import time, sleep
+
+          def get_random(lo=0, hi=1):
+              start = time()
+              sleep(lo + random() * (hi - lo))
+              return time() - start
+
+          ctx = zmq.Context.instance()
+          sock = ctx.socket(zmq.REQ)
+          sock.connect('ipc:///tmp/router')
+          sock.send(b'READY')
+          while True:
+              lo, hi = sock.recv_json()
+              sock.send_json(get_random(lo, hi))
+          </code></pre>
+        </section>
+        <section>
+          <h2>Load sharing router</h2>
+          <pre><code class="python">
+          import zmq
+
+          ctx = zmq.Context.instance()
+          back = ctx.socket(zmq.ROUTER)
+          back.bind('ipc:///tmp/router')
+          front = ctx.socket(zmq.ROUTER)
+          front.bind('ipc:///tmp/random')
+          ready = []
+          busy = {}
+
+          def handle_front():
+              if ready:
+                  client, _, request = front.recv_multipart()
+                  worker = ready.pop(0)
+                  busy[worker] = client
+                  back.send_multipart([worker, _, request])
+
+          def handle_back():
+              worker, _, response = back.recv_multipart()
+              if response != b'READY':
+                  client = busy.pop(worker)
+                  front.send_multipart([client, _, response])
+              ready.append(worker)
+
+          poller = zmq.Poller()
+          poller.register(back, zmq.POLLIN)
+          poller.register(front, zmq.POLLIN)
+          while True:
+              for sock, flags in poller.poll(1000):
+                  if sock == front:
+                      handle_front()
+                  elif sock == back:
+                      handle_back()
+          </code></pre>
+        </section>
+        <section>
+          <h2>TODO</h2>
+          <ul>
+            <li>Request timeout</li>
+            <li>Server heartbeat</li>
+            <li>Distributed routers</li>
+            <li>Security!</li>
+          </ul>
+        </section>
+        <section>
+          <h2>ZeroMQ</h2>
+          <dl>
+            <dt>Homepage</dt><dd><a href="https://zeromq.org">zeromq.org</a></dd>
+            <dt>Documents</dt><dd><a href="https://zguide.zeromq.org/page:all">zguide.zeromq.org</a></dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Thank You</h2>
+          <p>Questions?</p>
+        </section>
+      </div>
+    </div>
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+var forEach = function (array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope, i, array[i]);
+    }
+};
+
+// Strip the indentation from the pre-code sections
+forEach(document.querySelectorAll('pre code'), function(i, el) {
+    var lines = el.textContent.split('\n');
+    if (lines[0] === '') lines.shift();
+    var matches;
+    var indentation =
+        (matches = /^[\s\t]+/.exec(lines[0])) !== null ?
+            matches[0] :
+            null;
+    if (!!indentation) {
+        lines = lines.map(function (line) {
+            return line.replace(indentation, '').replace(/\t/g, '    ');
+        });
+
+        el.textContent = lines.join('\n').trim();
+    }
+});
+    </script>
+    <script>
+Reveal.initialize({
+    // The "normal" size of the presentation, scaled here for the notebook
+    width: 800,
+    height: 600,
+
+    // Factor of display size that should remain empty around the content
+    margin: 0.1,
+
+    // Bounds for smallest/largest possible scale to apply to content
+    minScale: 0.2,
+    maxScale: 1.5,
+
+    controls: false,    // Display controls in the bottom right corner
+    progress: true,     // Display a presentation progress bar
+    slideNumber: false, // Display the page number of the current slide
+    history: true,      // Push each slide change to the browser history
+    keyboard: true,     // Enable keyboard shortcuts for navigation
+    overview: true,     // Enable the slide overview mode
+    center: true,       // Vertical centering of slides
+    touch: true,        // Enables touch navigation on devices with touch input
+    loop: false,        // Loop the presentation
+    rtl: false,         // Change the presentation direction to be RTL
+    fragments: true,    // Turns fragments on and off globally
+
+    // Flags if the presentation is running in an embedded mode,
+    // i.e. contained within a limited portion of the screen
+    embedded: false,
+
+    // Flags if we should show a help overlay when the questionmark
+    // key is pressed
+    help: true,
+
+    // Number of milliseconds between automatically proceeding to the
+    // next slide, disabled when set to 0, this value can be overwritten
+    // by using a data-autoslide attribute on your slides
+    autoSlide: 0,
+    // Stop auto-sliding after user input
+    autoSlideStoppable: true,
+
+    mouseWheel: false,               // Enable slide navigation via mouse wheel
+    hideAddressBar: true,            // Hides the address bar on mobile devices
+    previewLinks: false,             // Opens links in an iframe preview overlay
+    transition: 'none',              // Transition style (none/fade/slide/convex/concave/zoom)
+    transitionSpeed: 'default',      // Transition speed (default/fast/slow)
+    backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
+    viewDistance: 3,                 // Number of slides away from the current that are visible
+
+    // Parallax background image
+    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+    // Parallax background size
+    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+    // Amount to move parallax background (horizontal and vertical) on slide change
+    // Number, e.g. 100
+    parallaxBackgroundHorizontal: '',
+    parallaxBackgroundVertical: '',
+
+    // Optional dependencies
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+        // Syntax highlight for <code> elements
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+        // Speaker notes
+        { src: '../reveal.js/plugin/notes/notes.js', async: true },
+
+        // Remote control your reveal.js presentation using a touch device
+        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
+
+        // MathJax
+        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+    ]
+    });
+    </script>
+  </body>
+</html>
