@@ -81,7 +81,8 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <h2>Why so many?</h2>
           <ul>
             <li>No one solution is a panacea</li>
-            <li>Each has issues in certain areas</li>
+            <li>Some are good at shoving bits around (I/O)</li>
+            <li>Some are good at twiddling bits on/off (processing)</li>
             <li>None are good at <em>everything</em></li>
             <li class="fragment">ZeroMQ is Yet Another solution, it's not The Solution</li>
           </ul>
@@ -220,7 +221,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
           for client in clients:
               server.send(b'DATA')
           for sock, flags in poller.poll(0):
-              print(repr(sock.recv()))
+              print(sock, repr(sock.recv()))
           </code></pre>
         </section>
         <section>
@@ -293,7 +294,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
               client.connect('inproc://foo')
               client.subscribe('') # modern version...
 
-          server.send_string('FOO BAR')
+          server.send_string('FOO')
           for client in clients:
               print(client.recv_string())
           </code></pre>
@@ -331,15 +332,14 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h2>Building with ZeroMQ</h2>
           <ol>
-            <li><em>No sharing state!</em></li>
             <li>Divide script into simple tasks</li>
-            <li>Tasks can be threads if you want</li>
-            <li><em>Don't use locks</em> (or events, conditions, etc.)</li>
+            <li><em>No sharing state!</em></li>
             <li>All communication between tasks over queues</li>
+            <li><em>Don't use locks</em> (or events, conditions, etc.)</li>
           </ol>
         </section>
         <section>
-          <h1>Show me the code!</h1>
+          <h1>Practice!</h1>
         </section>
         <section>
           <h2>A terrible RNG</h2>

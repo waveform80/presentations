@@ -12,4 +12,4 @@ for client in clients:
 for client in clients:
     server.send(b'DATA')
 for sock, flags in poller.poll(0):
-    print(repr(sock.recv()))
+    print(sock, repr(sock.recv()))
