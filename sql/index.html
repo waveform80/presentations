@@ -1,0 +1,448 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SQL</title>
+    <meta name="description" content="Still Quite Ludicrous">
+    <meta name="author" content="Dave Jones">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/serif.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <link rel="stylesheet" href="railroad-diagrams.css">
+<style type="text/css">
+.reveal .fragment.replace.visible:not(.current-fragment) {
+  display: none;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+}
+
+.reveal section img {
+  border: 0 none;
+  box-shadow: 0 0 8px #220;
+  vertical-align: middle;
+}
+
+.reveal section img.diagram {
+  box-shadow: none;
+  background: transparent;
+}
+
+.reveal h3 { border-bottom: 2px solid #220; }
+.reveal h4 { font-weight: bold; }
+.reveal ul { display: block; }
+.reveal h3, .reveal h4, .reveal p { text-align: left; }
+.reveal *:not(pre) > code {
+  border: 2px solid #886;
+  border-radius: 4px;
+  background: #ddb;
+  padding: 0 4px;
+  font-size: 85%;
+}
+
+.reveal table td {
+  border-bottom: 0 none;
+}
+</style>
+
+    <script>
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../reveal.js/' + (window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css');
+document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <script src="railroad-diagrams.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>SQL</h1>
+          <h2>Still Quite Laughable</h2>
+        </section>
+        <section>
+          <h2>Vitalstatistix</h2>
+          <dl>
+            <dt>Name</dt><dd>Dave Jones</dd>
+            <dt>Occupation</dt><dd>Database Frobnicator</dd>
+            <dt>Twitter</dt><dd><a href="https://twitter.com/waveform80">@waveform80</a></dd>
+            <dt>GitHub</dt><dd><a href="https://github.com/waveform80">github.com/waveform80</a></dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Now available online!</h2>
+          <a href="https://www.waveform.org.uk/presentations/sql/">www.waveform.org.uk/presentations/sql/</a>
+        </section>
+        <section>
+          <h3>SQL Introduction</h3>
+          <ul>
+            <li>It's a standard … but no-one follows the standard
+              <em>entirely</em></li>
+            <li>It's old, and therefore <em>very weird</em> in places</li>
+            <li>Despite numerous attempts to replace it, it's still the
+              pre-eminent data manipulation language</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Using SQL from Python</h3>
+          <ul>
+            <li>PEP-249 (sqlite3, psycopg2, mysqldb, etc.)</li>
+            <li>Badly designed in several places</li>
+            <li>Too variable / low-level to be seriously useful</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Using SQL from Python</h3>
+          <ul>
+            <li><a href="https://sqlalchemy.org">SQLAlchemy</a> to the rescue!</li>
+            <li>… and <a href="https://pandas.pydata.org/">Pandas</a>!</li>
+            <li>… or whatever your preferences are!</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Contact!</h3>
+          <pre><code class="python">
+          &gt;&gt;&gt; import sqlalchemy as sa
+          &gt;&gt;&gt; import pandas as pd
+          &gt;&gt;&gt; engine = sa.create_engine('sqlite:///flight.db')
+          &gt;&gt;&gt; c = engine.connect()
+          </code></pre>
+        </section>
+        <section>
+          <h3>Tables</h3>
+          <table>
+            <thead>
+              <tr><th>flight</th><th>timestamp</th><th>temp</th><th>press</th><th>hum</th><th>…</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>hab1</td><td>09:00:00</td><td>25.5</td><td>1020</td><td>40</td><td>…</td></tr>
+              <tr><td>hab1</td><td>09:01:00</td><td>25.6</td><td>1019</td><td>41</td><td>…</td></tr>
+              <tr><td>hab1</td><td>09:02:00</td><td>25.4</td><td>1020</td><td>42</td><td>…</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3><strike>Tables</strike></h3>
+          <p>SQL &ldquo;tables&rdquo; have:</p>
+          <ul>
+            <li>No order</li>
+            <li>No duplicates (well … sort of)</li>
+          </ul>
+          <p>They are <em>sets</em> of <em>tuples</em> (rows)</p>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike></h3>
+          <script>
+Diagram(Stack(
+      Sequence('CREATE TABLE', NonTerminal('table-name'), '('),
+      OneOrMore(NonTerminal('column-def'), ','),
+      ZeroOrMore(NonTerminal('constraint-def'), ','),
+      ')'
+      )).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike></h3>
+          <p><em>column-def::</em></p>
+          <script>
+Diagram(Stack(
+      Sequence(NonTerminal('column-name'), NonTerminal('type')),
+      Sequence(
+               Optional(Sequence('NOT NULL'), 'skip'),
+               Optional(Sequence('DEFAULT', Choice(0, 'NULL', NonTerminal('value'))), 'skip')
+               )
+      )).format(4).addTo();
+          </script>
+          <h4>Notes</h4>
+          <ul>
+            <li>Columns are nullable by default!</li>
+            <li>The default default is NULL</li>
+            <li>… even for NOT NULL columns</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike></h3>
+          <p><em>constraint-def::</em></p>
+          <script>
+Diagram(
+      Optional(Sequence('CONSTRAINT', NonTerminal('const-name'))),
+      Choice(0, NonTerminal('unique-key'), NonTerminal('foreign-key'), NonTerminal('check'))
+      ).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike></h3>
+          <p><em>unique-key::</em></p>
+          <script>
+Diagram(
+      Sequence(Choice(0, 'PRIMARY', 'UNIQUE'), 'KEY',
+      '(', OneOrMore(NonTerminal('column-name'), ','), ')')
+      ).format(4).addTo();
+          </script>
+          <p><em>check::</em></p>
+          <script>
+Diagram(Sequence('CHECK', '(', NonTerminal('predicate'), ')')
+      ).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike></h3>
+          <p><em>foreign-key::</em></p>
+          <script>
+Diagram(Stack(
+      Sequence('FOREIGN KEY', '(', OneOrMore(NonTerminal('column-name'), ','), ')', 'REFERENCES'),
+      Sequence(NonTerminal('table-name'),
+               Optional(Sequence('(', OneOrMore(NonTerminal('column-name'), ','), ')'))
+               ),
+      Sequence(Optional(Sequence('ON DELETE', NonTerminal('rule'))),
+               Optional(Sequence('ON UPDATE', NonTerminal('rule'))))
+      )).scale(1.1).format(4).addTo();
+          </script>
+          <p><em>rule::</em></p>
+          <script>
+Diagram(Choice(1, 'NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT')
+      ).scale(1.1).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Creating <strike>tables</strike>: example</h3>
+          <pre><code class="sql">
+          CREATE TABLE readings (
+              flight    VARCHAR(10) NOT NULL,
+              ts        TIMESTAMP NOT NULL,
+              temp      NUMERIC(3,1) NOT NULL,
+              pressure  NUMERIC(4,0) NOT NULL,
+              humidity  NUMERIC(3,0) NOT NULL,
+              accel_x   INTEGER DEFAULT 0 NOT NULL,
+              accel_y   INTEGER DEFAULT 0 NOT NULL,
+              accel_z   INTEGER DEFAULT 0 NOT NULL,
+
+              CONSTRAINT readings_pk PRIMARY KEY (flight, ts),
+              CONSTRAINT temp_ck CHECK (temp BETWEEN -70 AND 70),
+              CONSTRAINT pres_ck CHECK (pressure BETWEEN 0 AND 2000),
+              CONSTRAINT hum_ck CHECK (humidity BETWEEN 0 AND 100)
+          );
+          </code></pre>
+        </section>
+        <section>
+          <h3>Some notes</h3>
+          <ul>
+            <li>Nothing wrong with composite keys!</li>
+            <li>Use proper types for things!</li>
+            <li>Avoid <code>TEXT</code> unless you <em>really</em> mean it</li>
+            <li>Sprinkle <code>NOT NULL</code> around liberally</li>
+            <li>Always name your constraints</li>
+            <li>Use constraints!</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Running SQL in Python</h3>
+          <pre><code class="python">
+          &gt;&gt;&gt; sql = """ ... paste SQL here ... """
+          &gt;&gt;&gt; c.execute(sql)
+          </code></pre>
+          <p>Yup … that's it</p>
+        </section>
+        <section>
+          <h3>Filling <strike>tables</strike></h3>
+          <script>
+Diagram(Stack(
+      Sequence('INSERT', 'INTO', NonTerminal('table-name')),
+      Optional(Sequence('(', OneOrMore(NonTerminal('col-name'), ','), ')')),
+      NonTerminal('data'))).format(4).addTo();
+          </script>
+          <p><em>data::</em></p>
+          <script>
+Diagram(Choice(0,
+               Sequence('VALUES', OneOrMore(NonTerminal('row'), ',')),
+               NonTerminal('query'))).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Filling <strike>tables</strike></h3>
+          <pre><code class="sql">
+          INSERT INTO readings(flight, ts, temp, pressure, humidity)
+          VALUES ('hab1', '2015-01-01 09:00:00', 25.5, 1020, 40);
+
+          INSERT INTO readings(flight, ts, temp, pressure, humidity)
+          VALUES
+            ('hab1', '2015-01-01 09:01:00', 25.5, 1019, 40),
+            ('hab1', '2015-01-01 09:02:00', 25.5, 1019, 41);
+
+          INSERT INTO readings
+          SELECT flight, DATETIME(ts, '+3 minutes') AS ts, temp,
+                 pressure, humidity, accel_x, accel_y, accel_z
+          FROM readings;
+          </code></pre>
+        </section>
+        <section>
+          <h3>Transactions</h3>
+          <ul>
+            <li>Not unique to databases</li>
+            <li>… but more or less universal among databases</li>
+            <li><code>COMMIT</code> and <code>ROLLBACK</code> are the usual terms</li>
+            <li>… but you don't need to remember that because</li>
+            <li>Auto-commit is (sadly) often the default</li>
+            <li>… and in an explicit transactions <code>COMMIT</code> / <code>ROLLBACK</code> is usually implicit</li>
+            <li>Nested transactions are commonly supported</li>
+            <li>… but not universally</li>
+            <li>Beware engine peculiarities!</li>
+          </ul>
+        </section>
+        <section>
+          <h3>… in Python</h3>
+          <pre><code class="python">
+          &gt;&gt;&gt; c.begin()
+          &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
+          &gt;&gt;&gt; c.commit()
+          </code></pre>
+          <p>This is fine at the REPL, but …</p>
+        </section>
+        <section>
+          <h3>… in Python</h3>
+          <pre><code class="python">
+          with c.begin():
+              c.execute(""" ... some SQL ... """)
+          </code></pre>
+          <p>This is more normal in code (implicit transaction end)</p>
+        </section>
+        <section>
+          <h3>Clearing <strike>tables</strike></h3>
+          <script>
+Diagram(Stack(
+      Sequence('DELETE', 'FROM', NonTerminal('table-name')),
+      Optional(Sequence('WHERE', NonTerminal('predicate')))
+      )).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Clearing <strike>tables</strike></h3>
+          <pre><code class="sql">
+          DELETE FROM readings WHERE ts = '2015-01-01 09:05:00';
+
+          DELETE FROM readings WHERE ts &gt; '2015-01-01 09:02:00';
+
+          DELETE FROM readings;
+          </code></pre>
+        </section>
+        <section>
+
+        </section>
+        <section>
+          <h3>Thank You</h3>
+          <p>Questions?</p>
+        </section>
+      </div>
+    </div>
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+var forEach = function (array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope, i, array[i]);
+    }
+};
+
+// Strip the indentation from the pre-code sections
+forEach(document.querySelectorAll('pre code'), function(i, el) {
+    var lines = el.textContent.split('\n');
+    if (lines[0] === '') lines.shift();
+    var matches;
+    var indentation =
+        (matches = /^[\s\t]+/.exec(lines[0])) !== null ?
+            matches[0] :
+            null;
+    if (!!indentation) {
+        lines = lines.map(function (line) {
+            return line.replace(indentation, '').replace(/\t/g, '    ');
+        });
+
+        el.textContent = lines.join('\n').trim();
+    }
+});
+    </script>
+    <script>
+Reveal.initialize({
+    // The "normal" size of the presentation, scaled here for the notebook
+    width: 800,
+    height: 600,
+
+    // Factor of display size that should remain empty around the content
+    margin: 0.1,
+
+    // Bounds for smallest/largest possible scale to apply to content
+    minScale: 0.2,
+    maxScale: 1.5,
+
+    controls: false,    // Display controls in the bottom right corner
+    progress: true,     // Display a presentation progress bar
+    slideNumber: false, // Display the page number of the current slide
+    history: true,      // Push each slide change to the browser history
+    keyboard: true,     // Enable keyboard shortcuts for navigation
+    overview: true,     // Enable the slide overview mode
+    center: true,       // Vertical centering of slides
+    touch: true,        // Enables touch navigation on devices with touch input
+    loop: false,        // Loop the presentation
+    rtl: false,         // Change the presentation direction to be RTL
+    fragments: true,    // Turns fragments on and off globally
+
+    // Flags if the presentation is running in an embedded mode,
+    // i.e. contained within a limited portion of the screen
+    embedded: false,
+
+    // Flags if we should show a help overlay when the questionmark
+    // key is pressed
+    help: true,
+
+    // Number of milliseconds between automatically proceeding to the
+    // next slide, disabled when set to 0, this value can be overwritten
+    // by using a data-autoslide attribute on your slides
+    autoSlide: 0,
+    // Stop auto-sliding after user input
+    autoSlideStoppable: true,
+
+    mouseWheel: false,               // Enable slide navigation via mouse wheel
+    hideAddressBar: true,            // Hides the address bar on mobile devices
+    previewLinks: false,             // Opens links in an iframe preview overlay
+    transition: 'none',              // Transition style (none/fade/slide/convex/concave/zoom)
+    transitionSpeed: 'default',      // Transition speed (default/fast/slow)
+    backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
+    viewDistance: 3,                 // Number of slides away from the current that are visible
+
+    // Parallax background image
+    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+    // Parallax background size
+    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+    // Amount to move parallax background (horizontal and vertical) on slide change
+    // Number, e.g. 100
+    parallaxBackgroundHorizontal: '',
+    parallaxBackgroundVertical: '',
+
+    // Optional dependencies
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+        // Syntax highlight for <code> elements
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+        // Speaker notes
+        { src: '../reveal.js/plugin/notes/notes.js', async: true },
+
+        // Remote control your reveal.js presentation using a touch device
+        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
+
+        // MathJax
+        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+    ]
+    });
+    </script>
+  </body>
+</html>
