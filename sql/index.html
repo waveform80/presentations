@@ -31,7 +31,8 @@
 }
 
 .reveal h3 { border-bottom: 2px solid #220; }
-.reveal h4 { font-weight: bold; }
+.reveal h4 { font-weight: bold; margin: 1em 0 0 0; }
+.reveal h4 + p { margin-top: 0; }
 .reveal ul, .reveal ol { display: block; }
 .reveal h3, .reveal h4, .reveal p { text-align: left; }
 .reveal *:not(pre) > code {
@@ -41,10 +42,13 @@
   padding: 0 4px;
   font-size: 85%;
 }
-
-.reveal table td {
-  border-bottom: 0 none;
+.reveal ul ul li {
+  list-style-type: circle;
 }
+
+.reveal table { font-size: 85%; }
+.reveal table caption { font-style: italic; }
+.reveal table th, .reveal table td { padding: 0 18px; }
 </style>
 
     <script>
@@ -85,8 +89,8 @@ document.getElementsByTagName('head')[0].appendChild(link);
           <ul>
             <li>It's a standard … which no-one really follows</li>
             <li>It's old, and therefore <em>very weird</em> in places</li>
-            <li>Despite numerous valiant attempts to replace it, it's still the
-              de-facto standard data language</li>
+            <li>Despite numerous valiant (and some not so valiant) attempts to
+              replace it, it's still the de-facto standard data language</li>
           </ul>
         </section>
         <section>
@@ -175,14 +179,46 @@ Diagram(
       Choice(0, NonTerminal('unique-key'), NonTerminal('foreign-key'), NonTerminal('check'))
       ).format(4).addTo();
           </script>
+          <h4>Notes</h4>
+          <p>Probably the most important bit of a relational database, and what
+          really sets it apart from your spreadsheet!</p>
+        </section>
+        <section>
+          <h3>Intermission</h3>
+          <p><em>columns::</em></p>
+          <script>
+Diagram(OneOrMore(NonTerminal('column-name'), ',')).format(4).addTo();
+          </script>
+          <p><em>expressions::</em></p>
+          <script>
+Diagram(OneOrMore(NonTerminal('expression'), ',')).format(4).addTo();
+          </script>
+          <p><em>predicate::</em></p>
+          <script>
+Diagram(NonTerminal('test'), ZeroOrMore(Sequence(Choice(0, 'AND', 'OR'), 'test'))).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Intermission</h3>
+          <p><em>test::</em></p>
+          <script>
+Diagram(Choice(0,
+      Sequence(NonTerminal('expression'), Choice(0, '<', '<=', '=', '<>', '>=', '>'), NonTerminal('expression')),
+      Sequence(NonTerminal('expression'), Optional('NOT', 'skip'), 'BETWEEN', NonTerminal('expression'), 'AND', NonTerminal('expression')),
+      Sequence(NonTerminal('expression'), Optional('NOT', 'skip'), 'IN', '(', NonTerminal('expressions'), ')'),
+      Sequence(NonTerminal('expression'), Optional('NOT', 'skip'), 'LIKE', NonTerminal('expression')),
+      Sequence(NonTerminal('expression'), 'IS', Optional('NOT', 'skip'), 'NULL'),
+      Sequence(Optional('NOT', 'skip'), 'EXISTS', '(', NonTerminal('query'), ')')
+      )
+    ).scale(1).format(4).addTo();
+          </script>
         </section>
         <section>
           <h3>Creating <strike>tables</strike></h3>
           <p><em>unique-key::</em></p>
           <script>
 Diagram(
-      Sequence(Choice(0, 'PRIMARY', 'UNIQUE'), 'KEY',
-      '(', OneOrMore(NonTerminal('column-name'), ','), ')')
+      Sequence(Choice(0, 'PRIMARY', 'UNIQUE'), 'KEY', '(', NonTerminal('columns'), ')')
       ).format(4).addTo();
           </script>
           <p><em>check::</em></p>
@@ -196,10 +232,8 @@ Diagram(Sequence('CHECK', '(', NonTerminal('predicate'), ')')
           <p><em>foreign-key::</em></p>
           <script>
 Diagram(Stack(
-      Sequence('FOREIGN KEY', '(', OneOrMore(NonTerminal('column-name'), ','), ')', 'REFERENCES'),
-      Sequence(NonTerminal('table-name'),
-               Optional(Sequence('(', OneOrMore(NonTerminal('column-name'), ','), ')'))
-               ),
+      Sequence('FOREIGN KEY', '(', NonTerminal('columns'), ')', 'REFERENCES'),
+      Sequence(NonTerminal('table-name'), Optional(Sequence('(', NonTerminal('columns'), ')'))),
       Sequence(Optional(Sequence('ON DELETE', NonTerminal('rule'))),
                Optional(Sequence('ON UPDATE', NonTerminal('rule'))))
       )).scale(1.1).format(4).addTo();
@@ -232,10 +266,10 @@ Diagram(Choice(1, 'NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT')
         </section>
         <section>
           <h3>Some notes</h3>
-          <ol>
+          <ul>
             <li>Nothing wrong with composite keys!
               <ul>
-                <li>but keys should be <em>unique for life</em></li>
+                <li>but keys should be <em>immutable for entity's life</em></li>
                 <li>don't be afraid to use surrogates</li>
                 <li>but don't blindly use them everywhere</li>
               </ul>
@@ -251,7 +285,7 @@ Diagram(Choice(1, 'NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT')
                 <li>and name them!</li>
               </ul>
             </li>
-          </ol>
+          </ul>
         </section>
         <section>
           <h3>Running SQL in Python</h3>
@@ -265,8 +299,8 @@ Diagram(Choice(1, 'NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT')
           <h3>Filling <strike>tables</strike></h3>
           <script>
 Diagram(Stack(
-      Sequence('INSERT', 'INTO', NonTerminal('table-name')),
-      Optional(Sequence('(', OneOrMore(NonTerminal('col-name'), ','), ')')),
+      Sequence('INSERT', 'INTO'),
+      Sequence(NonTerminal('table-name'), Optional(Sequence('(', NonTerminal('columns'), ')'))),
       NonTerminal('data'))).format(4).addTo();
           </script>
           <p><em>data::</em></p>
@@ -296,13 +330,14 @@ Diagram(Choice(0,
           </code></pre>
         </section>
         <section>
-          <h3>Syntax notes</h3>
+          <h3>Syntax Notes</h3>
           <ul>
             <li><code>'I am a string'</code></li>
             <li><code>"I am NOT a string"</code> (in most engines)</li>
             <li><code>-- I am a single line comment</code></li>
             <li><code>/* I am a multi-line comment */</code></li>
             <li>No hanging commas (awww)</li>
+            <li>Case insensitive … sort of</li>
           </ul>
         </section>
         <section>
@@ -336,26 +371,27 @@ Diagram(Choice(0,
         <section>
           <h3>Transactions</h3>
           <ul>
-            <li>Not unique to relational databases</li>
-            <li>… but more or less universal among databases</li>
-            <li><code>COMMIT</code> and <code>ROLLBACK</code> are the usual terms</li>
-            <li>… but you don't need to remember that because</li>
-            <li>Auto-commit is (sadly) often the default</li>
-            <li>… and in an explicit transactions <code>COMMIT</code> / <code>ROLLBACK</code> is usually implicit</li>
-            <li>Nested transactions are commonly supported</li>
-            <li>… but not universally</li>
-            <li>Beware engine peculiarities!</li>
+            <li>Not unique to relational databases, but (almost) universal
+            among relational engines</li>
+            <li><code>COMMIT</code> and <code>ROLLBACK</code> are the usual
+              terms</li>
+            <li>But you don't need to remember that because auto-commit is
+              (sadly) often the default</li>
+            <li>And in an explicit transactions <code>COMMIT</code> /
+              <code>ROLLBACK</code> is usually implicit</li>
+            <li>Nested transactions are (almost) universally supported</li>
+            <li>Beware engine peculiarities (DDL especially)!</li>
           </ul>
         </section>
         <section>
           <h3>… in Python</h3>
           <pre><code class="python">
-          &gt;&gt;&gt; c.begin()
+          &gt;&gt;&gt; t = c.begin()
           &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
-          &gt;&gt;&gt; c.rollback()
-          &gt;&gt;&gt; c.begin()
+          &gt;&gt;&gt; t.rollback()
+          &gt;&gt;&gt; t = c.begin()
           &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
-          &gt;&gt;&gt; c.commit()
+          &gt;&gt;&gt; t.commit()
           </code></pre>
           <p>This is fine at the REPL, but …</p>
         </section>
@@ -395,12 +431,127 @@ Diagram(Stack(
         </section>
         <section>
           <h3>Bulk Loading</h3>
+          <p>Download this (≈7Mb):
+          <a href="https://www.waveform.org.uk/presentations/sql/flight-data.csv">www.waveform.org.uk/presentations/sql/flight-data.csv</a>
+          </p>
+          <p>This is a dataset (≈200k rows) of sensor readings from a HAB
+          flight with a Raspberry Pi Sense HAT.</p>
+        </section>
+        <section>
+          <h3>Bound Parameters</h3>
           <pre><code class="python">
-          import csv
-          def 
+          def load_data(filename):
+              c.execute("DELETE FROM readings")
+              sql = """
+                  INSERT INTO readings
+                      (flight, ts, temp, pressure, humidity,
+                      accel_x, accel_y, accel_z)
+                  VALUES
+                      ('hab1', ?, ?, ?, ?, ?, ?, ?)
+              """
+              data = pd.read_csv(filename)
+              for row in data.itertuples():
+                  c.execute(sql, (
+                      row.timestamp, row.temp_h, row.pressure,
+                      row.humidity, row.accel_x, row.accel_y,
+                      row.accel_z
+                  ))
           </code></pre>
+        </section>
+        <section>
+          <h3>Bound Parameters</h3>
+          <ul>
+            <li>The <em>only</em> way you should be inserting user values into
+              your database!</li>
+            <li>Two forms: <code>?</code> (positional parameter) and
+              <code>:name</code> (named parameter)</li>
+            <li>Pass a tuple of values for the un-named style, and a dict of
+              values for the named style</li>
+            <li>Each parameter can only represent a single value</li>
+            <li>You cannot use parameters to represent objects (tables
+              and columns); if you think you need this, you're doing it
+              wrong!</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Error!</h3>
           <pre><code class="python">
+          def load_data(filename):
+              insert = """
+                  INSERT INTO readings
+                      (flight, ts, temp, pressure, humidity,
+                      accel_x, accel_y, accel_z)
+                  VALUES
+                      ('hab1', ?, ?, ?, ?, ?, ?, ?)
+              """
+              data = pd.read_csv(filename)
+              c.execute("DELETE FROM readings")
+              for row in data.itertuples():
+                  c.execute(insert, (
+                      row.timestamp, row.temp_h, row.pressure,
+                      min(100, max(0, row.humidity)),
+                      row.accel_x, row.accel_y, row.accel_z
+                  ))
           </code></pre>
+        </section>
+        <section>
+          <h3>Twiddle your thumbs…</h3>
+          <ul>
+            <li>Transactions are <em>very</em> expensive!</li>
+            <li>Mostly because they sync to disk</li>
+            <li>Long running transactions are <em>bad</em> (especially in
+              concurrent situations)</li>
+            <li>Pack as much into a transaction as you reasonably can in a
+              short space of time</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Need for Speed</h3>
+          <pre><code class="python">
+          def load_data(filename):
+              insert = """
+                  INSERT INTO readings
+                      (flight, ts, temp, pressure, humidity,
+                      accel_x, accel_y, accel_z)
+                  VALUES
+                      ('hab1', ?, ?, ?, ?, ?, ?, ?)
+              """
+              data = pd.read_csv(filename)
+              with c.begin():
+                  c.execute("DELETE FROM readings")
+                  for row in data.itertuples():
+                      c.execute(insert, (
+                          row.timestamp, row.temp_h, row.pressure,
+                          min(100, max(0, row.humidity)),
+                          row.accel_x, row.accel_y, row.accel_z
+                      ))
+          </code></pre>
+          <p>This is ≈100× faster</p>
+        </section>
+        <section>
+          <h3>Round-trip cost</h3>
+          <pre><code class="python">
+          def load_data(filename):
+              insert = """
+                  INSERT INTO readings
+                      (flight, ts, temp, pressure, humidity,
+                      accel_x, accel_y, accel_z)
+                  VALUES
+                      ('hab1', ?, ?, ?, ?, ?, ?, ?)
+              """
+              data = pd.read_csv(filename)
+              data = [
+                  (row.timestamp, row.temp_h, row.pressure,
+                   min(100, max(0, row.humidity)),
+                   row.accel_x, row.accel_y, row.accel_z)
+                  for row in data.itertuples()
+              ]
+              with c.begin():
+                  c.execute("DELETE FROM readings")
+                  c.execute(insert, data)
+          </code></pre>
+          <p>This is ≈2× faster. See also: <code>to_sql()</code>
+          in Pandas</p>
         </section>
         <section>
           <h3>Modifying <strike>tables</strike></h3>
@@ -422,16 +573,22 @@ Diagram(Stack(
           UPDATE readings SET flight = 'hab2' WHERE flight = 'hab1';
 
           -- ... or something more complex
-          -- ...?
+          UPDATE readings SET temp = temp * CASE
+              WHEN pressure BETWEEN 0 AND 100 THEN 0.9
+              WHEN pressure BETWEEN 101 AND 800 THEN 1.0
+              WHEN pressure BETWEEN 801 AND 1000 THEN 1.1
+          END
+          WHERE pressure &lt;= 1000;
           </code></pre>
         </section>
         <section>
           <h3>Upsert?</h3>
-          <ol>
+          <ul>
             <li>There's a standard: <code>MERGE</code>
               <ul>
                 <li>all the commercial engines implement it</li>
-                <li>and none of the open-source engines</li>
+                <li>… to varying degrees</li>
+                <li>… none of the open-source engines use it</li>
               </ul>
             </li>
             <li>None of the open-source engines <em>quite</em> agree on what
@@ -444,7 +601,7 @@ Diagram(Stack(
                 <li>etc.</li>
               </ul>
             </li>
-          </ol>
+          </ul>
         </section>
         <section>
           <h3>Upsert?</h3>
@@ -453,10 +610,265 @@ Diagram(Stack(
             <li>If you need this: <em>read your engine's docs</em></li>
             <li>… and preferably some recent blog posts too (because your
               engine may have changed approach recently)</li>
-            <li>Don't think this is a trivial / easy operation!</li>
+            <li>Don't think this is a trivial / easy operation</li>
+            <li>… this is only true in trivial circumstances!</li>
           </ul>
         </section>
         <section>
+          <h3>Moar syntax!</h3>
+          <script>
+Diagram('ALTER TABLE', NonTerminal('table-name'), Choice(0,
+      Sequence('ADD', Choice(0, NonTerminal('column-def'), NonTerminal('constraint-def'))),
+      Sequence('DROP', Choice(0, NonTerminal('column-name'), NonTerminal('const-name'))),
+      Sequence('RENAME TO', NonTerminal('table-name')))
+    ).scale(1.4).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Moar <strike>tables</strike>!</h3>
+          <pre><code class="sql">
+          CREATE TABLE flights (
+              flight   VARCHAR(10) NOT NULL,
+              lat      REAL NOT NULL DEFAULT 0.0,
+              long     REAL NOT NULL DEFAULT 0.0,
+
+              CONSTRAINT flights_pk PRIMARY KEY (flight),
+              CONSTRAINT lat_ck CHECK (lat BETWEEN -90 AND 90),
+              CONSTRAINT long_ck CHECK (long BETWEEN -180 AND 180)
+          );
+
+          INSERT INTO flights(flight) VALUES ('hab1');
+
+          ALTER TABLE readings
+              ADD CONSTRAINT flights_fk FOREIGN KEY (flight)
+                  REFERENCES flights(flight) ON DELETE CASCADE;
+          </code></pre>
+        </section>
+        <section>
+          <h3>But for SQLite…</h3>
+          <pre><code class="sql">
+          CREATE TABLE readings2 (
+              flight    VARCHAR(10) NOT NULL,
+              ts        TIMESTAMP NOT NULL,
+              temp      NUMERIC(3,1) NOT NULL,
+              pressure  NUMERIC(4,0) NOT NULL,
+              humidity  NUMERIC(3,0) NOT NULL,
+              accel_x   INTEGER DEFAULT 0 NOT NULL,
+              accel_y   INTEGER DEFAULT 0 NOT NULL,
+              accel_z   INTEGER DEFAULT 0 NOT NULL,
+
+              CONSTRAINT readings_pk PRIMARY KEY (flight, ts),
+              CONSTRAINT temp_ck CHECK (temp BETWEEN -70 AND 70),
+              CONSTRAINT pres_ck CHECK (pressure BETWEEN 0 AND 2000),
+              CONSTRAINT hum_ck CHECK (humidity BETWEEN 0 AND 100),
+              CONSTRAINT flights_fk FOREIGN KEY (flight)
+                  REFERENCES flights(flight) ON DELETE CASCADE
+          );
+          </code></pre>
+        </section>
+        <section>
+          <h3>But for SQLite…</h3>
+          <pre><code class="sql">
+          PRAGMA foreign_keys=on;
+          INSERT INTO flights(flight) VALUES ('hab1');
+          INSERT INTO readings2 SELECT * FROM readings;
+          DROP TABLE readings;
+          ALTER TABLE readings2 RENAME TO readings;
+          </code></pre>
+          <h4>Notes</h4>
+          <p>SQLite doesn't support:</p>
+          <ul>
+            <li><code>FOREIGN KEY</code> by default (compatibility)</li>
+            <li><code>ALTER … DROP</code> (argh)</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Querying <strike>tables</strike></h3>
+          <p>Welcome to the stupidest syntax in SQL:</p>
+          <script>
+Diagram(Stack(
+      Sequence('SELECT', Choice(1, '*', NonTerminal('expressions')), 'FROM', NonTerminal('joins')),
+      Optional(Sequence('WHERE', NonTerminal('predicate')), 'skip'),
+      Sequence(
+        Optional(Sequence('GROUP BY', NonTerminal('columns')), 'skip'),
+        Optional(Sequence('HAVING', NonTerminal('predicate')), 'skip')),
+      Sequence(
+        Optional(Sequence('ORDER BY', NonTerminal('columns')), 'skip'),
+        Optional(Sequence('LIMIT', NonTerminal('num')), 'skip')
+        )
+    )).scale(1.4).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Query execution order</h3>
+          <ol>
+            <li><code>FROM</code></li>
+            <li><code>WHERE</code></li>
+            <li><code>GROUP BY</code></li>
+            <li><code>HAVING</code></li>
+            <li><code>SELECT</code></li>
+            <li><code>ORDER BY</code></li>
+            <li><code>LIMIT</code></li>
+          </ol>
+          <h4>Notes</h4>
+          <p>The output of each clause is a <em>single <strike>table</strike></em>; yes, even
+          the <code>FROM</code> clause!</p>
+        </section>
+        <section>
+          <h3>Moar data!</h3>
+          <pre><code class="sql">
+          INSERT INTO flights(flight) VALUES ('hab2'), ('hab3');
+          INSERT INTO readings
+          SELECT
+              'hab2', ts, temp, pressure, humidity,
+              accel_x, accel_y, accel_z
+          FROM readings
+          WHERE flight = 'hab1';
+          INSERT INTO readings
+          SELECT
+              'hab3', ts, temp, pressure, humidity,
+              accel_x, accel_y, accel_z
+          FROM readings
+          WHERE flight = 'hab1';
+          </code></pre>
+        </section>
+        <section>
+          <h3>FKs in action!</h3>
+          <pre><code class="sql">
+          SELECT COUNT(*) FROM readings;
+          DELETE FROM flights WHERE flight = 'hab3';
+          SELECT COUNT(*) FROM readings;
+          </code></pre>
+        </section>
+        <section>
+          <h3>Joining <strike>tables</strike></h3>
+          <p><em>joins::</em></p>
+          <script>
+Diagram(NonTerminal('table-ref'), ZeroOrMore(
+      Sequence(Choice(0,
+          Sequence(Choice(0, Skip(), 'LEFT', 'RIGHT', 'FULL'), 'JOIN', NonTerminal('table-ref'),
+              Choice(0, Sequence('ON', NonTerminal('predicate')),
+                        Sequence('USING', '(', NonTerminal('columns'), ')'))),
+          Sequence(Choice(1, ',', Sequence('CROSS', 'JOIN')), NonTerminal('table-ref'))
+          )))).scale(1).format(4).addTo();
+          </script>
+          <p><em>table-ref::</em></p>
+          <script>
+Diagram(Choice(0,
+      Sequence(NonTerminal('table-name'), Optional(Sequence('AS', NonTerminal('alias'), '(', NonTerminal('columns'), ')'))),
+      Sequence('(', NonTerminal('query'), ')', Sequence('AS', NonTerminal('alias'), '(', NonTerminal('columns'), ')')),
+      Sequence('(', NonTerminal('joins'), ')')
+      )).scale(1).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Join semantics</h3>
+          <p>All joins start life as a cross product:</p>
+          <table style="float: left">
+            <caption>foo</caption>
+            <thead>
+              <tr><th><u>id</u></th><th>value_a</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>1</td></tr>
+              <tr><td>B</td><td>2</td></tr>
+              <tr><td>C</td><td>3</td></tr>
+            </tbody>
+          </table>
+          <table style="float: right">
+            <caption>bar</caption>
+            <thead>
+              <tr><th><u>id</u></th><th>value_b</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>4</td></tr>
+              <tr><td>B</td><td>5</td></tr>
+            </tbody>
+          </table>
+          <table>
+            <caption>foo JOIN bar</caption>
+            <thead>
+              <tr><th>foo.id</th><th>bar.id</th><th>foo.value_a</th><th>bar.value_b</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>A</td><td>1</td><td>4</td></tr>
+              <tr><td>A</td><td>B</td><td>1</td><td>5</td></tr>
+              <tr><td>B</td><td>A</td><td>2</td><td>4</td></tr>
+              <tr><td>B</td><td>B</td><td>2</td><td>5</td></tr>
+              <tr><td>C</td><td>A</td><td>3</td><td>4</td></tr>
+              <tr><td>C</td><td>B</td><td>3</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3>Join semantics</h3>
+          <p>Then the predicate is applied to filter rows:</p>
+          <table>
+            <caption>foo JOIN bar ON foo.id = bar.id</caption>
+            <thead>
+              <tr><th>foo.id</th><th>bar.id</th><th>foo.value_a</th><th>bar.value_b</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>A</td><td>1</td><td>4</td></tr>
+              <tr><td>B</td><td>B</td><td>2</td><td>5</td></tr>
+            </tbody>
+          </table>
+          <h4>Notes</h4>
+          <p>Technically, the result set has two columns named
+          &ldquo;id&rdquo;; this is normal in SQL and is why column order
+          matters</p>
+        </section>
+        <section>
+          <h3>Join semantics</h3>
+          <p>All joins form a tree which is evaluated to form the output of the
+          <code>FROM</code> clause:</p>
+          <pre><code class="sql">
+          SELECT *
+          FROM a
+              JOIN b ON a.id = b.ref_id
+              JOIN (
+                  c JOIN d ON c.id = d.ref_id
+              ) ON b.cid = c.ref_id
+          </code></pre>
+          <img src="joins.svg" class="diagram" />
+        </section>
+        <section>
+          <h3>FKs in action!</h3>
+          <pre><code class="sql">
+          SELECT f.flight, r.ts, r.temp
+          FROM flights f JOIN readings r ON f.flight = r.flight
+          </code></pre>
+          <h4>Notes</h4>
+          <p>Some engines will perform join elimination when foreign keys
+          permit them to, as in the above case (unforunately SQLite is not one
+          of them)</p>
+        </section>
+        <section>
+          <h3>Views</h3>
+          <script>
+Diagram('CREATE VIEW', NonTerminal('table-name'), 'AS', NonTerminal('query')).format(4).addTo();
+          </script>
+          <p>Yup … that's it</p>
+        </section>
+        <section>
+          <h3>Views: example</h3>
+          <pre><code class="sql">
+          CREATE VIEW flight_readings AS
+          SELECT
+              f.flight, f.lat, f.long, r.temp, r.pressure,
+              r.humidity, r.accel_x, r.accel_y, r.accel_z
+          FROM
+              flights AS f
+              JOIN readings AS r ON f.flight = r.flight;
+          </code></pre>
+          <p>SQL compilers are <em>smarter than most people realize!</em></p>
+          <pre><code class="sql">
+          SELECT flight, ts, temp FROM flight_readings;
+          </code></pre>
+          <p>On a smart engine this will become:</p>
+          <pre><code class="sql">
+          SELECT flight, ts, temp FROM readings;
+          </code></pre>
         </section>
         <section>
           <h3>Thank You</h3>
