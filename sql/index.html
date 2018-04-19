@@ -96,7 +96,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h3>Using SQL from Python</h3>
           <ul>
-            <li>PEP-249 (sqlite3, psycopg2, mysqldb, etc.)</li>
+            <li><a href="https://www.python.org/dev/peps/pep-0249/"><acronym
+                  title="Python Enhancement Proposal">PEP</acronym>-249</a>
+              (sqlite3, psycopg2, mysqldb, etc.)</li>
             <li>Badly designed in several places</li>
             <li>Too variable / low-level to be seriously useful</li>
           </ul>
@@ -380,7 +382,8 @@ Diagram(Choice(0,
             <li>And in an explicit transactions <code>COMMIT</code> /
               <code>ROLLBACK</code> is usually implicit</li>
             <li>Nested transactions are (almost) universally supported</li>
-            <li>Beware engine peculiarities (DDL especially)!</li>
+            <li>Beware engine peculiarities (<acronym title="Data Definition
+                Language (a subset of SQL)">DDL</acronym> especially)!</li>
           </ul>
         </section>
         <section>
@@ -393,7 +396,8 @@ Diagram(Choice(0,
           &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
           &gt;&gt;&gt; t.commit()
           </code></pre>
-          <p>This is fine at the REPL, but …</p>
+          <p>This is fine at the <acronym title="Read Evaluate Print Loop (the
+            interpreter)">REPL</acronym>, but …</p>
         </section>
         <section>
           <h3>… in Python</h3>
