@@ -676,10 +676,10 @@ Diagram('ALTER TABLE', NonTerminal('table-name'), Choice(0,
           ALTER TABLE readings2 RENAME TO readings;
           </code></pre>
           <h4>Notes</h4>
-          <p>SQLite doesn't support:</p>
           <ul>
-            <li><code>FOREIGN KEY</code> by default (compatibility)</li>
-            <li><code>ALTER … DROP</code> (argh)</li>
+            <li>Foreign keys are <em>not</em> automatically indexed on the child side</li>
+            <li>SQLite doesn't support <code>FOREIGN KEY</code> by default (compatibility)</li>
+            <li>SQLite doesn't support <code>ALTER … DROP</code> (argh)</li>
           </ul>
         </section>
         <section>

@@ -1,0 +1,13 @@
+graph G {
+    graph [rankdir=BT];
+    graph [bgcolor="#ffffff00"];
+    join1 [label = "JOIN"];
+    join2 [label = "JOIN"];
+    join3 [label = "JOIN"];
+    a -- join1;
+    b -- join1;
+    c -- join2;
+    d -- join2;
+    join1 -- join3;
+    join2 -- join3;
+}
