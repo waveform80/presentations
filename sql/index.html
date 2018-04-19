@@ -855,7 +855,7 @@ Diagram('CREATE VIEW', NonTerminal('table-name'), 'AS', NonTerminal('query')).fo
           <pre><code class="sql">
           CREATE VIEW flight_readings AS
           SELECT
-              f.flight, f.lat, f.long, r.ts,
+              r.flight, f.lat, f.long, r.ts,
               r.temp, r.pressure, r.humidity,
               r.accel_x, r.accel_y, r.accel_z
           FROM
