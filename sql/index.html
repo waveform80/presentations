@@ -32,7 +32,7 @@
 
 .reveal h3 { border-bottom: 2px solid #220; }
 .reveal h4 { font-weight: bold; }
-.reveal ul { display: block; }
+.reveal ul, .reveal ol { display: block; }
 .reveal h3, .reveal h4, .reveal p { text-align: left; }
 .reveal *:not(pre) > code {
   border: 2px solid #886;
@@ -83,11 +83,10 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h3>SQL Introduction</h3>
           <ul>
-            <li>It's a standard … but no-one follows the standard
-              <em>entirely</em></li>
+            <li>It's a standard … which no-one really follows</li>
             <li>It's old, and therefore <em>very weird</em> in places</li>
-            <li>Despite numerous attempts to replace it, it's still the
-              pre-eminent data manipulation language</li>
+            <li>Despite numerous valiant attempts to replace it, it's still the
+              de-facto standard data language</li>
           </ul>
         </section>
         <section>
@@ -233,14 +232,26 @@ Diagram(Choice(1, 'NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT')
         </section>
         <section>
           <h3>Some notes</h3>
-          <ul>
-            <li>Nothing wrong with composite keys!</li>
-            <li>Use proper types for things!</li>
-            <li>Avoid <code>TEXT</code> unless you <em>really</em> mean it</li>
-            <li>Sprinkle <code>NOT NULL</code> around liberally</li>
-            <li>Always name your constraints</li>
-            <li>Use constraints!</li>
-          </ul>
+          <ol>
+            <li>Nothing wrong with composite keys!
+              <ul>
+                <li>but keys should be <em>unique for life</em></li>
+                <li>don't be afraid to use surrogates</li>
+                <li>but don't blindly use them everywhere</li>
+              </ul>
+            </li>
+            <li>Use proper types for things!
+              <ul>
+                <li>avoid <code>TEXT</code> unless you <em>really</em> mean it</li>
+              </ul>
+            </li>
+            <li>Use constraints liberally!
+              <ul>
+                <li>including <code>NOT NULL</code></li>
+                <li>and name them!</li>
+              </ul>
+            </li>
+          </ol>
         </section>
         <section>
           <h3>Running SQL in Python</h3>
@@ -266,16 +277,18 @@ Diagram(Choice(0,
           </script>
         </section>
         <section>
-          <h3>Filling <strike>tables</strike></h3>
+          <h3>Filling <strike>tables</strike>: examples</h3>
           <pre><code class="sql">
           INSERT INTO readings(flight, ts, temp, pressure, humidity)
           VALUES ('hab1', '2015-01-01 09:00:00', 25.5, 1020, 40);
 
+          -- Inserting multiple rows in a single statement
           INSERT INTO readings(flight, ts, temp, pressure, humidity)
           VALUES
             ('hab1', '2015-01-01 09:01:00', 25.5, 1019, 40),
             ('hab1', '2015-01-01 09:02:00', 25.5, 1019, 41);
 
+          -- Inserting the results of a query
           INSERT INTO readings
           SELECT flight, DATETIME(ts, '+3 minutes') AS ts, temp,
                  pressure, humidity, accel_x, accel_y, accel_z
@@ -283,9 +296,47 @@ Diagram(Choice(0,
           </code></pre>
         </section>
         <section>
+          <h3>Syntax notes</h3>
+          <ul>
+            <li><code>'I am a string'</code></li>
+            <li><code>"I am NOT a string"</code> (in most engines)</li>
+            <li><code>-- I am a single line comment</code></li>
+            <li><code>/* I am a multi-line comment */</code></li>
+            <li>No hanging commas (awww)</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Viewing results</h3>
+          <pre><code class="python">
+          &gt;&gt;&gt; pd.set_option('display.width', 120)
+          &gt;&gt;&gt; pd.read_sql('readings', c)
+                flight                  ts  temp  pressure  humidity  accel_x  accel_y  accel_z
+          0   hab1 2015-01-01 09:00:00  25.5      1020        40        0        0        0
+          1   hab1 2015-01-01 09:01:00  25.5      1019        40        0        0        0
+          2   hab1 2015-01-01 09:02:00  25.5      1019        41        0        0        0
+          3   hab1 2015-01-01 09:03:00  25.5      1020        40        0        0        0
+          4   hab1 2015-01-01 09:04:00  25.5      1019        40        0        0        0
+          5   hab1 2015-01-01 09:05:00  25.5      1019        41        0        0        0
+          </code></pre>
+        </section>
+        <section>
+          <h3>Transactions</h3>
+          <dl>
+            <dt>Atomicity</dt>
+            <dd>– everything either happens or it doesn't</dd>
+            <dt>Consistency</dt>
+            <dd>– you don't need to think about this one</dd>
+            <dt>Isolation</dt>
+            <dd>– nobody else sees your changes until <code>COMMIT</code></dd>
+            <dt>Durability</dt>
+            <dd>– when <code>COMMIT</code> says it's complete, it's safe to
+            take an axe to the power cable (well … for your data anyway)</dd>
+          </dl>
+        </section>
+        <section>
           <h3>Transactions</h3>
           <ul>
-            <li>Not unique to databases</li>
+            <li>Not unique to relational databases</li>
             <li>… but more or less universal among databases</li>
             <li><code>COMMIT</code> and <code>ROLLBACK</code> are the usual terms</li>
             <li>… but you don't need to remember that because</li>
@@ -301,6 +352,9 @@ Diagram(Choice(0,
           <pre><code class="python">
           &gt;&gt;&gt; c.begin()
           &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
+          &gt;&gt;&gt; c.rollback()
+          &gt;&gt;&gt; c.begin()
+          &gt;&gt;&gt; c.execute(""" ... some SQL ... """)
           &gt;&gt;&gt; c.commit()
           </code></pre>
           <p>This is fine at the REPL, but …</p>
@@ -308,6 +362,10 @@ Diagram(Choice(0,
         <section>
           <h3>… in Python</h3>
           <pre><code class="python">
+          with c.begin():
+              c.execute(""" ... some SQL ... """)
+              raise Exception('Something went wrong!')
+
           with c.begin():
               c.execute(""" ... some SQL ... """)
           </code></pre>
@@ -325,15 +383,80 @@ Diagram(Stack(
         <section>
           <h3>Clearing <strike>tables</strike></h3>
           <pre><code class="sql">
+          -- Delete a row
           DELETE FROM readings WHERE ts = '2015-01-01 09:05:00';
 
+          -- Delete some rows
           DELETE FROM readings WHERE ts &gt; '2015-01-01 09:02:00';
 
+          -- Delete EVERYTHING! (mwuhahahaha)
           DELETE FROM readings;
           </code></pre>
         </section>
         <section>
+          <h3>Bulk Loading</h3>
+          <pre><code class="python">
+          import csv
+          def 
+          </code></pre>
+          <pre><code class="python">
+          </code></pre>
+        </section>
+        <section>
+          <h3>Modifying <strike>tables</strike></h3>
+          <script>
+Diagram(Stack(
+      Sequence('UPDATE', NonTerminal('table-name'), 'SET'),
+      OneOrMore(Sequence(NonTerminal('column-name'), '=', NonTerminal('expression')), ','),
+      Optional(Sequence('WHERE', NonTerminal('predicate')))
+      )).format(4).addTo();
+          </script>
+        </section>
+        <section>
+          <h3>Modifying <strike>tables</strike>: examples</h3>
+          <pre><code class="sql">
+          -- Increase the temperature for all records
+          UPDATE readings SET temp = temp + 1;
 
+          -- Shift all hab1 readings to hab2
+          UPDATE readings SET flight = 'hab2' WHERE flight = 'hab1';
+
+          -- ... or something more complex
+          -- ...?
+          </code></pre>
+        </section>
+        <section>
+          <h3>Upsert?</h3>
+          <ol>
+            <li>There's a standard: <code>MERGE</code>
+              <ul>
+                <li>all the commercial engines implement it</li>
+                <li>and none of the open-source engines</li>
+              </ul>
+            </li>
+            <li>None of the open-source engines <em>quite</em> agree on what
+              to use instead:
+              <ul>
+                <li><code>REPLACE</code></li>
+                <li><code>WITH (UPDATE…)</code></li>
+                <li><code>INSERT … ON CONFLICT</code></li>
+                <li><code>INSERT … IGNORE</code></li>
+                <li>etc.</li>
+              </ul>
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h3>Upsert?</h3>
+          <ul>
+            <li>I'm not touching this one with a barge pole</li>
+            <li>If you need this: <em>read your engine's docs</em></li>
+            <li>… and preferably some recent blog posts too (because your
+              engine may have changed approach recently)</li>
+            <li>Don't think this is a trivial / easy operation!</li>
+          </ul>
+        </section>
+        <section>
         </section>
         <section>
           <h3>Thank You</h3>
