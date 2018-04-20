@@ -83,12 +83,14 @@ document.getElementsByTagName('head')[0].appendChild(link);
         <section>
           <h2>Now available online!</h2>
           <a href="https://www.waveform.org.uk/presentations/sql/">www.waveform.org.uk/presentations/sql/</a>
+          <p style="text-align: center"><small>(my apologies this doesn't seem
+            to work well in Firefox!)</small></p>
         </section>
         <section>
           <h3>SQL Introduction</h3>
           <ul>
             <li>It's a standard … which no-one really follows</li>
-            <li>It's old, and therefore <em>very weird</em> in places</li>
+            <li>It's old, and therefore <em>very weird</em> in places
             <li>Despite numerous valiant (and some not so valiant) attempts to
               replace it, it's still the de-facto standard data language</li>
           </ul>
@@ -468,10 +470,9 @@ Diagram(Stack(
           <ul>
             <li>The <em>only</em> way you should be inserting user values into
               your database!</li>
-            <li>Two forms: <code>?</code> (positional parameter) and
-              <code>:name</code> (named parameter)</li>
-            <li>Pass a tuple of values for the un-named style, and a dict of
-              values for the named style</li>
+            <li>One (standard) form: <code>?</code> (positional parameter)</li>
+            <li>You're better off using SQLAlchemy's SQL generation for this
+              so you don't need to deal with PEP-249's insane variants</li>
             <li>Each parameter can only represent a single value</li>
             <li>You cannot use parameters to represent objects (tables
               and columns); if you think you need this, you're doing it
@@ -682,8 +683,10 @@ Diagram('ALTER TABLE', NonTerminal('table-name'), Choice(0,
           </code></pre>
           <h4>Notes</h4>
           <ul>
-            <li>Foreign keys are <em>not</em> automatically indexed on the child side</li>
-            <li>SQLite doesn't support <code>FOREIGN KEY</code> by default (compatibility)</li>
+            <li>Foreign keys are <em>not</em> automatically indexed on the
+              child side</li>
+            <li>SQLite doesn't support <code>FOREIGN KEY</code> by default
+              (compatibility)</li>
             <li>SQLite doesn't support <code>ALTER … DROP</code> (argh)</li>
           </ul>
         </section>
@@ -716,8 +719,9 @@ Diagram(Stack(
             <li><code>LIMIT</code></li>
           </ol>
           <h4>Notes</h4>
-          <p>The output of each clause is a <em>single <strike>table</strike></em>; yes, even
-          the <code>FROM</code> clause!</p>
+          <p>The output of each clause is a <em>single
+            <strike>table</strike></em>; yes, even the <code>FROM</code>
+          clause!</p>
         </section>
         <section>
           <h3>Moar data!</h3>
@@ -845,7 +849,7 @@ Diagram(Choice(0,
           </code></pre>
           <h4>Notes</h4>
           <p>Some engines will perform join elimination when foreign keys
-          permit them to, as in the above case (unforunately SQLite is not one
+          permit them to, as in the above case (unfortunately SQLite is not one
           of them)</p>
         </section>
         <section>
