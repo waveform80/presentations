@@ -1,0 +1,204 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The Marvellous, Miraculous: Structa!</title>
+    <meta name="description" content="Analyzing data so you don't have to">
+    <meta name="author" content="Dave Jones">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/serif.css" id="theme">
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+<style type="text/css">
+.reveal .fragment.replace.visible:not(.current-fragment) {
+  display: none;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+}
+
+.reveal section img {
+  border: 0 none;
+  box-shadow: 0 0 8px #220;
+  vertical-align: middle;
+}
+
+.reveal section img.diagram {
+  box-shadow: none;
+  background: transparent;
+}
+
+.reveal table td {
+  border-bottom: 0 none;
+}
+</style>
+
+    <script>
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../reveal.js/' + (window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css');
+document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Structa!</h1>
+          <h2>Analyzing Data So You Don't Have To</h2>
+        </section>
+        <section>
+          <h2>Are you</h2>
+          <ul>
+            <li class="fragment">confused by CSV?</li>
+            <li class="fragment">confounded by JSON?</li>
+            <li class="fragment">confusticated by YAML?</li>
+            <li class="fragment">(is that even a word?)</li>
+          </ul>
+        </section>
+        <section>
+          <h2>See the Only Patented Panacea for Your Data!</h2>
+          <p class="fragment">(disclaimer: not a panacea and patent not even pending)</p>
+        </section>
+        <section>
+          <h2>A Demonstration!</h2>
+          <p>With 200+MB of unstructured, undocumented, utterly unruly JSON!</p>
+          <p class="fragment">(a.k.a. the Ubuntu Security Notices database)</p>
+        </section>
+        <section>
+          <h2>Step 1: Get Structa!</h2>
+          <p><code>snap install structa</code></p>
+          <p class="fragment">(or <code>add-apt-repository ppa:waveform/structa</code> if you want useful things like man-pages and bash-completion)</p>
+        </section>
+        <section>
+          <h2>Step 2: Get Data!</h2>
+          <p><code>curl -s https://usn.ubuntu.com/usn-db/database.json</code></p>
+          <p class="fragment">(disclaimer: this much JSON may be harmful to your browser)</p>
+        </section>
+        <section>
+          <h2>Step 3: Analyze Data!</h2>
+          <p><code>!! | structa</code></p>
+          <p class="fragment">(surgeon general's warning: shell history expansions may be harmful for mental health)</p>
+        </section>
+        <section>
+          <h2>Useful Output within Seconds!</h2>
+          <p class="fragment">(disclaimer: nothing like seconds, it's more like a good coffee break of minutes)</p>
+        </section>
+        <section>
+          <h2>How?</h2>
+          <p>Dave's semi-mystical patent-pending formula!</p>
+          <p class="fragment">(disclaimer: still not patented, and not even slightly mystical)</p>
+        </section>
+        <section>
+          <h2>Thank You</h2>
+          <p>Questions?</p>
+        </section>
+      </div>
+    </div>
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+    <script>
+var forEach = function (array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope, i, array[i]);
+    }
+};
+
+// Strip the indentation from the pre-code sections
+forEach(document.querySelectorAll('pre code'), function(i, el) {
+    var lines = el.textContent.split('\n');
+    if (lines[0] === '') lines.shift();
+    var matches;
+    var indentation =
+        (matches = /^[\s\t]+/.exec(lines[0])) !== null ?
+            matches[0] :
+            null;
+    if (!!indentation) {
+        lines = lines.map(function (line) {
+            return line.replace(indentation, '').replace(/\t/g, '    ');
+        });
+
+        el.textContent = lines.join('\n').trim();
+    }
+});
+    </script>
+    <script>
+Reveal.initialize({
+    // The "normal" size of the presentation, scaled here for the notebook
+    width: 800,
+    height: 600,
+
+    // Factor of display size that should remain empty around the content
+    margin: 0.1,
+
+    // Bounds for smallest/largest possible scale to apply to content
+    minScale: 0.2,
+    maxScale: 1.5,
+
+    controls: false,    // Display controls in the bottom right corner
+    progress: true,     // Display a presentation progress bar
+    slideNumber: false, // Display the page number of the current slide
+    history: true,      // Push each slide change to the browser history
+    keyboard: true,     // Enable keyboard shortcuts for navigation
+    overview: true,     // Enable the slide overview mode
+    center: true,       // Vertical centering of slides
+    touch: true,        // Enables touch navigation on devices with touch input
+    loop: false,        // Loop the presentation
+    rtl: false,         // Change the presentation direction to be RTL
+    fragments: true,    // Turns fragments on and off globally
+
+    // Flags if the presentation is running in an embedded mode,
+    // i.e. contained within a limited portion of the screen
+    embedded: false,
+
+    // Flags if we should show a help overlay when the questionmark
+    // key is pressed
+    help: true,
+
+    // Number of milliseconds between automatically proceeding to the
+    // next slide, disabled when set to 0, this value can be overwritten
+    // by using a data-autoslide attribute on your slides
+    autoSlide: 0,
+    // Stop auto-sliding after user input
+    autoSlideStoppable: true,
+
+    mouseWheel: false,               // Enable slide navigation via mouse wheel
+    hideAddressBar: true,            // Hides the address bar on mobile devices
+    previewLinks: false,             // Opens links in an iframe preview overlay
+    transition: 'none',              // Transition style (none/fade/slide/convex/concave/zoom)
+    transitionSpeed: 'default',      // Transition speed (default/fast/slow)
+    backgroundTransition: 'default', // Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)
+    viewDistance: 3,                 // Number of slides away from the current that are visible
+
+    // Parallax background image
+    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+    // Parallax background size
+    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+    // Amount to move parallax background (horizontal and vertical) on slide change
+    // Number, e.g. 100
+    parallaxBackgroundHorizontal: '',
+    parallaxBackgroundVertical: '',
+
+    // Optional dependencies
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+        // Syntax highlight for <code> elements
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+        // Speaker notes
+        { src: '../reveal.js/plugin/notes/notes.js', async: true },
+
+        // Remote control your reveal.js presentation using a touch device
+        //{ src: '../reveal.js/plugin/remotes/remotes.js', async: true },
+
+        // MathJax
+        //{ src: '../reveal.js/plugin/math/math.js', async: true }
+    ]
+    });
+    </script>
+  </body>
+</html>
